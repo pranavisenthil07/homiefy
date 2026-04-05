@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Homiefy — Find your vibe, find your tribe</title>
+<style>
+  :root {
+    --purple: #7F77DD;
+    --purple-dark: #534AB7;
+    --purple-light: #EEEDFE;
+    --purple-text: #3C3489;
+    --green-light: #EAF3DE;
+    --green-text: #3B6D11;
+    --green-mid: #1D9E75;
+    --amber-light: #FAEEDA;
+    --amber-text: #854F0B;
+    --red-light: #FCEBEB;
+    --red-text: #A32D2D;
+    --bg: #ffffff;
+    --bg2: #f7f7f5;
+    --bg3: #f0efe9;
+    --text: #1a1a1a;
+    --text2: #6b6b6b;
+    --text3: #9a9a9a;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+  a { color: var(--purple); text-decoration: none; }
+
+  /* NAV */
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; border-bottom: 0.5px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-size: 22px; font-weight: 600; color: var(--text); cursor: pointer; }
+  .nav-logo span { color: var(--purple); }
+  .nav-links { display: flex; gap: 8px; align-items: center; }
+  .notif-wrap { position: relative; display: inline-block; }
+  .notif-dot { width: 8px; height: 8px; background: #E24B4A; border-radius: 50%; position: absolute; top: 2px; right: 2px; display: none; }
+
+  /* BUTTONS */
+  .btn { padding: 8px 18px; border-radius: var(--radius); font-size: 14px; cursor: pointer; border: 0.5px solid var(--border2); background: transparent; color: var(--text); font-family: inherit; transition: all 0.15s; font-weight: 500; }
+  .btn:hover { background: var(--bg2); }
+  .btn-primary { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .btn-primary:hover { background: var(--purple-dark); border-color: var(--purple-dark); }
+  .btn-sm { padding: 5px 12px; font-size: 13px; }
+  .btn-danger { border-color: #E24B4A; color: var(--red-text); }
+  .btn-danger:hover { background: var(--red-light); }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero { padding: 5rem 2rem 4rem; text-align: center; max-width: 700px; margin: 0 auto; }
+  .hero-badge { display: inline-block; background: var(--purple-light); color: var(--purple-dark); font-size: 13px; padding: 5px 16px; border-radius: 99px; margin-bottom: 1.5rem; font-weight: 500; }
+  .hero h1 { font-size: 52px; font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 1.2rem; letter-spacing: -1px; }
+  .hero h1 span { color: var(--purple); }
+  .hero p { font-size: 18px; color: var(--text2); line-height: 1.7; margin-bottom: 2rem; }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* FEATURES */
+  .section { padding: 4rem 2rem; max-width: 940px; margin: 0 auto; }
+  .section-tag { font-size: 12px; font-weight: 600; color: var(--purple); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .section-title { font-size: 30px; font-weight: 700; color: var(--text); margin-bottom: 2.5rem; }
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .feature-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .f-icon { width: 40px; height: 40px; background: var(--purple-light); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+  .f-icon svg { width: 20px; height: 20px; stroke: var(--purple); fill: none; stroke-width: 2; }
+  .feature-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .feature-card p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* HOW */
+  .how-section { background: var(--bg2); padding: 4rem 2rem; }
+  .how-inner { max-width: 680px; margin: 0 auto; }
+  .steps { margin-top: 2rem; }
+  .step { display: flex; gap: 16px; padding: 1.2rem 0; border-bottom: 0.5px solid var(--border); }
+  .step:last-child { border-bottom: none; }
+  .step-n { width: 32px; height: 32px; border-radius: 50%; background: var(--purple); color: #fff; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .step h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .step p { font-size: 13px; color: var(--text2); margin: 0; line-height: 1.6; }
+
+  /* FORM */
+  .form-page { max-width: 580px; margin: 3rem auto; padding: 0 1.5rem 5rem; }
+  .form-header h2 { font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .form-header p { font-size: 14px; color: var(--text2); margin-bottom: 1.5rem; }
+  .progress-wrap { height: 4px; background: var(--bg3); border-radius: 99px; margin-bottom: 8px; }
+  .progress-fill { height: 100%; background: var(--purple); border-radius: 99px; transition: width 0.3s; }
+  .step-label { font-size: 12px; color: var(--text3); margin-bottom: 2rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 10px 14px; border-radius: var(--radius); border: 0.5px solid var(--border2);
+    background: var(--bg); font-size: 14px; color: var(--text); font-family: inherit; transition: border 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--purple); }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 7px 16px; border-radius: 99px; border: 0.5px solid var(--border2); font-size: 13px; cursor: pointer; color: var(--text); background: var(--bg); transition: all 0.15s; user-select: none; font-weight: 500; }
+  .chip:hover { border-color: var(--purple); color: var(--purple); }
+  .chip.sel { background: var(--purple-light); border-color: var(--purple); color: var(--purple-dark); }
+  .form-nav { display: flex; justify-content: space-between; margin-top: 2rem; }
+
+  /* MATCHES */
+  .matches-page { max-width: 760px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .page-sub { font-size: 14px; color: var(--text2); margin-bottom: 1.5rem; }
+  .filter-row { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .fchip { padding: 6px 16px; border-radius: 99px; border: 0.5px solid var(--border2); font-size: 13px; cursor: pointer; color: var(--text2); background: transparent; font-family: inherit; font-weight: 500; transition: all 0.15s; }
+  .fchip.active { background: var(--purple-light); border-color: var(--purple); color: var(--purple-dark); }
+  .match-cards { display: flex; flex-direction: column; gap: 14px; }
+  .match-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; transition: border 0.2s; }
+  .match-card.mutual { border-color: var(--purple); border-width: 1.5px; }
+  .match-top { display: flex; gap: 14px; align-items: flex-start; }
+  .avatar { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+  .match-info { flex: 1; min-width: 0; }
+  .match-name { font-size: 16px; font-weight: 600; color: var(--text); }
+  .match-meta { font-size: 13px; color: var(--text2); margin: 3px 0 10px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--bg2); color: var(--text2); border: 0.5px solid var(--border); }
+  .match-right { text-align: right; flex-shrink: 0; }
+  .score-big { font-size: 22px; font-weight: 700; color: var(--purple); }
+  .score-lbl { font-size: 11px; color: var(--text3); }
+  .score-bar { width: 60px; height: 4px; background: var(--bg3); border-radius: 99px; margin: 6px 0 0 auto; }
+  .score-fill2 { height: 100%; background: var(--purple); border-radius: 99px; }
+  .mutual-badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 99px; background: var(--green-light); color: var(--green-text); margin-top: 5px; font-weight: 500; }
+  .pending-badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 99px; background: var(--amber-light); color: var(--amber-text); margin-top: 5px; font-weight: 500; }
+  .match-note { font-size: 13px; color: var(--text2); margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--border); font-style: italic; }
+  .match-sunday { font-size: 13px; color: var(--text2); margin-top: 6px; }
+  .match-sunday strong { color: var(--text); font-style: normal; }
+  .match-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+  .connect-btn { padding: 8px 18px; border-radius: var(--radius); font-size: 13px; cursor: pointer; font-family: inherit; font-weight: 500; background: var(--purple); color: #fff; border: none; transition: background 0.15s; }
+  .connect-btn:hover { background: var(--purple-dark); }
+  .connect-btn:disabled { background: var(--bg2); color: var(--text3); cursor: default; }
+  .pass-btn { padding: 8px 14px; border-radius: var(--radius); font-size: 13px; cursor: pointer; font-family: inherit; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); transition: background 0.15s; }
+  .pass-btn:hover { background: var(--bg2); }
+  .contact-box { background: var(--green-light); border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: var(--green-text); margin-top: 12px; font-weight: 500; }
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text2); font-size: 14px; }
+
+  /* REQUESTS */
+  .req-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 12px; display: flex; gap: 14px; align-items: center; }
+  .req-info { flex: 1; }
+  .req-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .req-meta { font-size: 13px; color: var(--text2); }
+  .req-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .accept-btn { padding: 7px 16px; border-radius: var(--radius); font-size: 13px; cursor: pointer; font-family: inherit; background: var(--purple); color: #fff; border: none; font-weight: 500; transition: background 0.15s; }
+  .accept-btn:hover { background: var(--purple-dark); }
+  .reject-btn { padding: 7px 14px; border-radius: var(--radius); font-size: 13px; cursor: pointer; font-family: inherit; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); }
+
+  /* ADMIN */
+  .admin-layout { display: flex; min-height: calc(100vh - 65px); }
+  .sidebar { width: 210px; flex-shrink: 0; border-right: 0.5px solid var(--border); padding: 1rem 0; background: var(--bg); }
+  .sidebar-section { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; padding: 0.75rem 1.25rem 0.3rem; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 1.25rem; font-size: 13px; cursor: pointer; color: var(--text2); border-left: 2px solid transparent; transition: all 0.15s; font-weight: 500; }
+  .nav-item:hover { background: var(--bg2); color: var(--text); }
+  .nav-item.active { color: var(--purple); background: var(--purple-light); border-left-color: var(--purple); }
+  .nav-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+  .badge-c { margin-left: auto; font-size: 11px; background: var(--purple); color: #fff; border-radius: 99px; padding: 1px 8px; }
+  .admin-main { flex: 1; padding: 1.75rem; background: var(--bg2); overflow: hidden; }
+  .admin-panel { display: none; }
+  .admin-panel.active { display: block; }
+  .admin-title { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .admin-sub { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
+  .stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--bg); border-radius: var(--radius); padding: 1rem; border: 0.5px solid var(--border); }
+  .stat-label { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+  .stat-val { font-size: 28px; font-weight: 700; color: var(--text); }
+  .stat-delta { font-size: 11px; color: var(--green-text); margin-top: 3px; font-weight: 500; }
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
+  .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-size: 11px; color: var(--text2); font-weight: 600; padding: 8px 10px; border-bottom: 0.5px solid var(--border); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 10px 10px; border-bottom: 0.5px solid var(--border); color: var(--text); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg2); }
+  .sbadge { font-size: 11px; padding: 3px 10px; border-radius: 99px; font-weight: 500; }
+  .s-matched { background: var(--green-light); color: var(--green-text); }
+  .s-pending { background: var(--amber-light); color: var(--amber-text); }
+  .s-mutual { background: var(--purple-light); color: var(--purple-text); }
+  .s-new { background: var(--bg2); color: var(--text2); }
+  .avatar-sm { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; vertical-align: middle; margin-right: 8px; }
+  .search-row { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .search-row input, .search-row select { padding: 7px 12px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg); font-size: 13px; color: var(--text); font-family: inherit; }
+  .search-row input { flex: 1; min-width: 140px; }
+  .run-box { border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; background: var(--bg); margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .run-info h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .run-info p { font-size: 13px; color: var(--text2); margin: 0; }
+  .threshold-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+  .threshold-row label { font-size: 12px; color: var(--text2); }
+  .threshold-val { font-size: 13px; font-weight: 600; color: var(--purple); min-width: 36px; }
+  .progress-bar2 { height: 4px; background: var(--bg3); border-radius: 99px; margin: 10px 0 6px; }
+  .progress-fill2 { height: 100%; background: var(--purple); border-radius: 99px; transition: width 0.5s; }
+  .match-pair { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  .match-pair:last-child { border-bottom: none; }
+  .pair-names { flex: 1; font-size: 13px; color: var(--text); font-weight: 500; }
+  .pair-score { font-size: 13px; font-weight: 700; color: var(--purple); width: 44px; text-align: right; }
+  .pair-bar-wrap { width: 64px; height: 4px; background: var(--bg3); border-radius: 99px; }
+  .pair-bar { height: 100%; border-radius: 99px; background: var(--purple); }
+  .log-item { font-size: 12px; padding: 6px 0; border-bottom: 0.5px solid var(--border); display: flex; gap: 10px; align-items: center; }
+  .log-item:last-child { border-bottom: none; }
+  .log-time { color: var(--text3); flex-shrink: 0; width: 80px; }
+  .log-msg { color: var(--text); flex: 1; }
+  .log-type { font-size: 10px; padding: 2px 8px; border-radius: 99px; flex-shrink: 0; font-weight: 500; }
+  .log-match { background: var(--green-light); color: var(--green-text); }
+  .log-user { background: var(--purple-light); color: var(--purple-text); }
+  .log-system { background: var(--bg2); color: var(--text2); }
+
+  /* TOAST */
+  .toast-wrap { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 999; pointer-events: none; }
+  .toast { background: #1a1a1a; color: #fff; padding: 12px 24px; border-radius: var(--radius); font-size: 14px; opacity: 0; transition: opacity 0.3s; white-space: nowrap; font-weight: 500; }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 34px; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .nav { padding: 1rem; }
+    .admin-layout { flex-direction: column; }
+    .sidebar { width: 100%; border-right: none; border-bottom: 0.5px solid var(--border); display: flex; flex-wrap: wrap; padding: 0.5rem; gap: 4px; }
+    .sidebar-section { display: none; }
+    .nav-item { padding: 7px 10px; border-left: none; border-bottom: 2px solid transparent; font-size: 12px; }
+    .nav-item.active { border-left: none; border-bottom-color: var(--purple); background: transparent; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toast-wrap"><div class="toast" id="toast"></div></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo" onclick="showPage('landing')">homie<span>fy</span></div>
+  <div class="nav-links">
+    <div class="notif-wrap">
+      <button class="btn btn-sm" onclick="showPage('requests')">Requests</button>
+      <div class="notif-dot" id="notif-dot"></div>
+    </div>
+    <button class="btn btn-sm" onclick="showPage('matches')">My matches</button>
+    <button class="btn btn-sm" onclick="showPage('admin')">Admin</button>
+    <button class="btn btn-sm btn-primary" onclick="showPage('form')">Get started</button>
+  </div>
+</nav>
+
+<!-- ══════════════════ LANDING ══════════════════ -->
+<div class="page active" id="page-landing">
+  <div class="hero">
+    <div class="hero-badge">AI shortlists. You choose.</div>
+    <h1>Find your vibe,<br>find your <span>tribe</span></h1>
+    <p>Homiefy matches you with roommates who actually get you — same energy, same habits, same wavelength.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" onclick="showPage('form')">Find my roommate</button>
+      <button class="btn" onclick="showPage('matches')">Browse matches</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-tag">Why Homiefy</div>
+    <div class="section-title">Matching beyond just location</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="f-icon"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zM4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+        <h3>Vibe matching</h3>
+        <p>AI reads your lifestyle and habits to find people you'd actually enjoy living with.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>You're in control</h3>
+        <p>AI gives you a shortlist. You browse, connect, and choose. No pressure, no spam.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <h3>Mutual match only</h3>
+        <p>Contact details revealed only when both sides connect. Safe and private always.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Real compatibility</h3>
+        <p>Budget, cleanliness, sleep schedule, habits — the stuff that actually matters.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="how-section">
+    <div class="how-inner">
+      <div class="section-tag" style="text-align:center">How it works</div>
+      <div class="section-title" style="text-align:center;margin-bottom:0">Four steps to your perfect roommate</div>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div><h4>Fill your profile</h4><p>Your habits, schedule, budget, and vibe — takes about 3 minutes.</p></div></div>
+        <div class="step"><div class="step-n">2</div><div><h4>AI builds your shortlist</h4><p>Only 70%+ compatible profiles shown. No scrolling through hundreds of strangers.</p></div></div>
+        <div class="step"><div class="step-n">3</div><div><h4>Browse &amp; connect</h4><p>Read their note and ideal Sunday. Send a connect request if they feel right.</p></div></div>
+        <div class="step"><div class="step-n">4</div><div><h4>Mutual match = contact revealed</h4><p>When both sides connect, numbers are unlocked. Say hello!</p></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ FORM ══════════════════ -->
+<div class="page" id="page-form">
+  <div class="form-page">
+    <div class="form-header">
+      <h2>Create your profile</h2>
+      <p>Takes about 3 minutes. Be honest — it helps us find your best match!</p>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="f-progress" style="width:20%"></div></div>
+    <div class="step-label" id="f-step-label">Step 1 of 5 — Basic info</div>
+
+    <div id="fstep-1">
+      <div class="form-row">
+        <div class="form-group"><label>Full name</label><input type="text" placeholder="Your name" id="f-name"/></div>
+        <div class="form-group"><label>Age</label><input type="number" placeholder="20" id="f-age"/></div>
+      </div>
+      <div class="form-group"><label>Contact number</label><input type="tel" placeholder="+91 98765 43210" id="f-phone"/></div>
+      <div class="form-group"><label>Gender</label>
+        <div class="chip-group" id="cg-gender">
+          <div class="chip" data-val="male">Male</div>
+          <div class="chip" data-val="female">Female</div>
+          <div class="chip" data-val="other">Other</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Year of study</label>
+        <div class="chip-group" id="cg-year">
+          <div class="chip" data-val="1st">1st year</div>
+          <div class="chip" data-val="2nd">2nd year</div>
+          <div class="chip" data-val="3rd">3rd year</div>
+          <div class="chip" data-val="4th">4th year</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Degree</label><input type="text" placeholder="B.Tech, BCA..." id="f-degree"/></div>
+        <div class="form-group"><label>Department</label><input type="text" placeholder="CSE, ECE..." id="f-dept"/></div>
+      </div>
+    </div>
+
+    <div id="fstep-2" style="display:none">
+      <div class="form-group"><label>Preferred area / locality</label><input type="text" placeholder="Near college, hostel area..." id="f-area"/></div>
+      <div class="form-group"><label>Budget (per person / month)</label>
+        <div class="chip-group" id="cg-budget">
+          <div class="chip" data-val="10k">Under ₹10k</div>
+          <div class="chip" data-val="15k">₹10k–15k</div>
+          <div class="chip" data-val="20k">₹15k–20k</div>
+          <div class="chip" data-val="30k">₹20k–30k</div>
+          <div class="chip" data-val="30k+">₹30k+</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Move-in date</label><input type="date" id="f-movein"/></div>
+      <div class="form-group"><label>Your situation</label>
+        <div class="chip-group" id="cg-situation">
+          <div class="chip" data-val="have">I have a place, looking for roommates</div>
+          <div class="chip" data-val="need">I need a place &amp; roommates</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Gender preference for roommate</label>
+        <div class="chip-group" id="cg-genderpref">
+          <div class="chip" data-val="same">Same gender only</div>
+          <div class="chip" data-val="any">No preference</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fstep-3" style="display:none">
+      <div class="form-group"><label>Cleanliness level</label>
+        <div class="chip-group" id="cg-clean">
+          <div class="chip" data-val="ocd">OCD clean</div>
+          <div class="chip" data-val="very">Very clean</div>
+          <div class="chip" data-val="normal">Clean but not strict</div>
+          <div class="chip" data-val="messy">Messy is fine</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Sleep schedule</label>
+        <div class="chip-group" id="cg-sleep">
+          <div class="chip" data-val="morning">Morning person</div>
+          <div class="chip" data-val="night">Night owl</div>
+          <div class="chip" data-val="flex">Flexible</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Noise preference at home</label>
+        <div class="chip-group" id="cg-noise">
+          <div class="chip" data-val="quiet">Prefer quiet</div>
+          <div class="chip" data-val="some">Some noise is fine</div>
+          <div class="chip" data-val="lively">Love a lively home</div>
+        </div>
+      </div>
+      <div class="form-group"><label>How social are you at home?</label>
+        <div class="chip-group" id="cg-social">
+          <div class="chip" data-val="out_often">I go out often</div>
+          <div class="chip" data-val="sometimes">Go out sometimes</div>
+          <div class="chip" data-val="stay_home">Stay home mostly</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Cooking</label>
+        <div class="chip-group" id="cg-cook">
+          <div class="chip" data-val="self">Cook ourselves</div>
+          <div class="chip" data-val="maid">Hire a maid</div>
+          <div class="chip" data-val="order">Order food mostly</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fstep-4" style="display:none">
+      <div class="form-group"><label>Personality</label>
+        <div class="chip-group" id="cg-personality">
+          <div class="chip" data-val="introvert">Introvert</div>
+          <div class="chip" data-val="ambivert">Ambivert</div>
+          <div class="chip" data-val="extrovert">Extrovert</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Alcohol</label>
+        <div class="chip-group" id="cg-alcohol">
+          <div class="chip" data-val="yes">I consume alcohol</div>
+          <div class="chip" data-val="no">I don't</div>
+          <div class="chip" data-val="ok">I don't but it's okay</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Smoking</label>
+        <div class="chip-group" id="cg-smoke">
+          <div class="chip" data-val="yes">I smoke</div>
+          <div class="chip" data-val="no">I don't smoke</div>
+          <div class="chip" data-val="ok">Don't but it's okay</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Parties / guests</label>
+        <div class="chip-group" id="cg-parties">
+          <div class="chip" data-val="yes">Occasional house parties</div>
+          <div class="chip" data-val="no">No parties please</div>
+          <div class="chip" data-val="rare">Rare gatherings are fine</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Languages you're comfortable with</label>
+        <div class="chip-group" id="cg-lang">
+          <div class="chip" data-val="malayalam">Malayalam</div>
+          <div class="chip" data-val="tamil">Tamil</div>
+          <div class="chip" data-val="kannada">Kannada</div>
+          <div class="chip" data-val="telugu">Telugu</div>
+          <div class="chip" data-val="hindi">Hindi</div>
+          <div class="chip" data-val="english">English</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fstep-5" style="display:none">
+      <div class="form-group"><label>Native place</label><input type="text" placeholder="Chennai, Madurai..." id="f-native"/></div>
+      <div class="form-group"><label>Your ideal Sunday at home</label><textarea placeholder="Describe your perfect lazy Sunday..." id="f-sunday"></textarea></div>
+      <div class="form-group"><label>One dealbreaker</label><input type="text" placeholder="Something you absolutely cannot tolerate..." id="f-deal"/></div>
+      <div class="form-group"><label>A small note for your roommate</label><textarea placeholder="Hey future roommate! A little about me..." id="f-note"></textarea></div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn" id="btn-back" onclick="formBack()" style="visibility:hidden">Back</button>
+      <button class="btn btn-primary" id="btn-next" onclick="formNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MATCHES ══════════════════ -->
+<div class="page" id="page-matches">
+  <div class="matches-page">
+    <div class="page-title">Your shortlist</div>
+    <div class="page-sub">AI-filtered matches above 70% — browse and connect with whoever feels right.</div>
+    <div class="filter-row">
+      <button class="fchip active" onclick="filterMatches('all',this)">All</button>
+      <button class="fchip" onclick="filterMatches('new',this)">New</button>
+      <button class="fchip" onclick="filterMatches('connected',this)">Requested</button>
+      <button class="fchip" onclick="filterMatches('mutual',this)">Mutual</button>
+    </div>
+    <div class="match-cards" id="match-cards"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ REQUESTS ══════════════════ -->
+<div class="page" id="page-requests">
+  <div class="matches-page">
+    <div class="page-title">Connect requests</div>
+    <div class="page-sub">People who want to connect with you. Accept to reveal contact details.</div>
+    <div id="req-list"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ ADMIN ══════════════════ -->
+<div class="page" id="page-admin">
+  <div class="admin-layout">
+    <div class="sidebar">
+      <div class="sidebar-section">Main</div>
+      <div class="nav-item active" onclick="showAdminPanel('dashboard',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="showAdminPanel('users',this)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Users <span class="badge-c">247</span>
+      </div>
+      <div class="sidebar-section">Matching</div>
+      <div class="nav-item" onclick="showAdminPanel('matching',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Run matching
+      </div>
+      <div class="nav-item" onclick="showAdminPanel('pairs',this)">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Match pairs
+      </div>
+      <div class="sidebar-section">System</div>
+      <div class="nav-item" onclick="showAdminPanel('logs',this)">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+        Activity log
+      </div>
+    </div>
+
+    <div class="admin-main">
+      <div class="admin-panel active" id="ap-dashboard">
+        <div class="admin-title">Dashboard</div>
+        <div class="admin-sub">Overview of Homiefy — live stats.</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-label">Total users</div><div class="stat-val">247</div><div class="stat-delta">+12 this week</div></div>
+          <div class="stat-card"><div class="stat-label">Matched pairs</div><div class="stat-val">89</div><div class="stat-delta">+6 this week</div></div>
+          <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-val">69</div></div>
+          <div class="stat-card"><div class="stat-label">Mutual connects</div><div class="stat-val">34</div><div class="stat-delta">+3 today</div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">City breakdown</span></div>
+          <table><thead><tr><th>City</th><th>Users</th><th>Matched</th><th>Pending</th></tr></thead>
+          <tbody>
+            <tr><td>Chennai</td><td>98</td><td>42</td><td>24</td></tr>
+            <tr><td>Bangalore</td><td>76</td><td>28</td><td>19</td></tr>
+            <tr><td>Mumbai</td><td>41</td><td>12</td><td>16</td></tr>
+            <tr><td>Hyderabad</td><td>32</td><td>7</td><td>10</td></tr>
+          </tbody></table>
+        </div>
+        <div class="card"><div class="card-head"><span class="card-title">Recent activity</span></div><div id="dash-log"></div></div>
+      </div>
+
+      <div class="admin-panel" id="ap-users">
+        <div class="admin-title">All users</div>
+        <div class="admin-sub">Browse, search, and manage every profile.</div>
+        <div class="search-row">
+          <input type="text" placeholder="Search by name..." id="user-search" oninput="filterUsers()"/>
+          <select id="user-city" onchange="filterUsers()"><option value="">All cities</option><option>Chennai</option><option>Bangalore</option><option>Mumbai</option></select>
+          <select id="user-status" onchange="filterUsers()"><option value="">All statuses</option><option>Matched</option><option>Pending</option><option>New</option></select>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden"><table><thead><tr><th>Name</th><th>City</th><th>Budget</th><th>Personality</th><th>Status</th><th></th></tr></thead><tbody id="user-tbody"></tbody></table></div>
+      </div>
+
+      <div class="admin-panel" id="ap-matching">
+        <div class="admin-title">Run AI matching</div>
+        <div class="admin-sub">Trigger the matching engine across all users.</div>
+        <div class="run-box">
+          <div class="run-info">
+            <h4>Minimum compatibility threshold</h4>
+            <p>Only pairs scoring above this will be suggested.</p>
+            <div class="threshold-row">
+              <label>Threshold</label>
+              <input type="range" min="50" max="95" step="5" value="70" id="threshold" oninput="document.getElementById('thresh-val').textContent=this.value+'%'"/>
+              <span class="threshold-val" id="thresh-val">70%</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="runMatching()">Run matching now</button>
+        </div>
+        <div class="card" id="matching-result" style="display:none">
+          <div class="card-head"><span class="card-title" id="match-result-title">Matching in progress...</span></div>
+          <div class="progress-bar2"><div class="progress-fill2" id="match-progress" style="width:0%"></div></div>
+          <div id="match-result-body" style="font-size:13px;color:var(--text2);margin-top:8px"></div>
+        </div>
+        <div class="card"><div class="card-head"><span class="card-title">Matching history</span></div>
+          <table><thead><tr><th>Run date</th><th>Threshold</th><th>Users</th><th>Pairs found</th></tr></thead>
+          <tbody>
+            <tr><td>Today, 10:14am</td><td>70%</td><td>247</td><td>14</td></tr>
+            <tr><td>Yesterday, 6:00pm</td><td>70%</td><td>235</td><td>11</td></tr>
+            <tr><td>Mar 31, 9:00am</td><td>65%</td><td>220</td><td>18</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+
+      <div class="admin-panel" id="ap-pairs">
+        <div class="admin-title">Match pairs</div>
+        <div class="admin-sub">All AI-suggested pairs and their current status.</div>
+        <div class="card"><div id="pairs-list"></div></div>
+      </div>
+
+      <div class="admin-panel" id="ap-logs">
+        <div class="admin-title">Activity log</div>
+        <div class="admin-sub">All system events, user actions, and match updates.</div>
+        <div class="card"><div id="full-log"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const avatarBg   = ['#EEEDFE','#E1F5EE','#FAECE7','#E6F1FB','#FAEEDA','#FBEAF0'];
+const avatarText = ['#534AB7','#0F6E56','#993C1D','#185FA5','#854F0B','#993556'];
+
+const profiles = [
+  {id:1,name:'Priya S',city:'Chennai',budget:'₹15k–20k',personality:'Introvert',score:94,tags:['night owl','very clean','non-smoker','no parties'],note:'Love reading and cooking on weekends. Looking for someone chill and respectful of space.',sunday:'Slow mornings, chai, a good book. Maybe a walk in the evening.',status:'new'},
+  {id:2,name:'Arjun R',city:'Chennai',budget:'₹15k–20k',personality:'Ambivert',score:88,tags:['flexible','moderately clean','non-smoker','occasional gatherings'],note:'Work from home mostly. Love music but keep it low after 10pm!',sunday:'Cooking a big meal, watching a show, maybe a friend or two over.',status:'connected'},
+  {id:3,name:'Sneha K',city:'Chennai',budget:'₹10k–15k',personality:'Extrovert',score:76,tags:['morning person','clean','social','non-smoker'],note:'Super social but I respect home as a chill space too. Love plants!',sunday:'Brunch with friends, gym, then a lazy evening at home.',status:'mutual'},
+  {id:4,name:'Divya T',city:'Chennai',budget:'₹15k–20k',personality:'Ambivert',score:82,tags:['night owl','very clean','bilingual','no parties'],note:'Designer by day, reader by night. Looking for a calm, clean home.',sunday:'Sketch, cook, watch a film. Very homebody Sunday.',status:'new'},
+];
+
+const requests = [
+  {id:10,name:'Kavya M',city:'Chennai',budget:'₹15k–20k',score:79,status:'pending'},
+  {id:11,name:'Rohit P',city:'Chennai',budget:'₹10k–15k',score:72,status:'pending'},
+];
+
+const adminUsers = [
+  {name:'Priya S',city:'Chennai',budget:'₹15–20k',personality:'Introvert',status:'Matched'},
+  {name:'Arjun R',city:'Chennai',budget:'₹15–20k',personality:'Ambivert',status:'Matched'},
+  {name:'Sneha K',city:'Chennai',budget:'₹10–15k',personality:'Extrovert',status:'Pending'},
+  {name:'Rahul M',city:'Bangalore',budget:'₹20–30k',personality:'Introvert',status:'Pending'},
+  {name:'Divya T',city:'Bangalore',budget:'₹15–20k',personality:'Ambivert',status:'Matched'},
+  {name:'Karthik B',city:'Chennai',budget:'₹10–15k',personality:'Extrovert',status:'New'},
+  {name:'Meera J',city:'Mumbai',budget:'₹20–30k',personality:'Introvert',status:'New'},
+  {name:'Arun P',city:'Chennai',budget:'₹15–20k',personality:'Ambivert',status:'Pending'},
+];
+
+const pairs = [
+  {u1:'Priya S',u2:'Divya T',score:94,status:'mutual'},
+  {u1:'Arjun R',u2:'Arun P',score:88,status:'connected'},
+  {u1:'Sneha K',u2:'Meera J',score:82,status:'pending'},
+  {u1:'Rahul M',u2:'Karthik B',score:78,status:'pending'},
+];
+
+const logs = [
+  {time:'10:32am',msg:'Mutual match: Priya S & Divya T',type:'match'},
+  {time:'10:18am',msg:'New user signed up: Vikram S (Mumbai)',type:'user'},
+  {time:'10:14am',msg:'Matching engine run — 14 pairs found',type:'system'},
+  {time:'9:55am',msg:'Connect request: Arjun R → Arun P',type:'match'},
+  {time:'9:40am',msg:'New user signed up: Meera J (Mumbai)',type:'user'},
+  {time:'9:12am',msg:'New user signed up: Karthik B (Chennai)',type:'user'},
+  {time:'8:50am',msg:'Matching engine run — 11 pairs found',type:'system'},
+];
+
+let cardStates = {};
+profiles.forEach(p => { cardStates[p.id] = p.status; });
+
+// ── NAVIGATION ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(id==='matches') renderMatches('all');
+  if(id==='requests') renderRequests();
+  if(id==='admin') { renderAdminUsers(adminUsers); renderPairs(); renderLog('dash-log',logs.slice(0,4)); renderLog('full-log',logs); }
+  window.scrollTo(0,0);
+}
+
+// ── FORM ──
+let fStep = 1;
+const fTotal = 5;
+const fLabels = ['Basic info','Location & budget','Daily habits','Lifestyle & vibe','Final touches'];
+
+function formNext() {
+  if(fStep < fTotal) {
+    document.getElementById('fstep-'+fStep).style.display = 'none';
+    fStep++;
+    document.getElementById('fstep-'+fStep).style.display = 'block';
+    document.getElementById('btn-back').style.visibility = 'visible';
+    document.getElementById('btn-next').textContent = fStep===fTotal ? 'Submit' : 'Next';
+    document.getElementById('f-progress').style.width = (fStep/fTotal*100)+'%';
+    document.getElementById('f-step-label').textContent = `Step ${fStep} of ${fTotal} — ${fLabels[fStep-1]}`;
+  } else {
+    showPage('matches');
+    showToast('Profile saved! Here are your top matches.');
+  }
+}
+function formBack() {
+  if(fStep > 1) {
+    document.getElementById('fstep-'+fStep).style.display = 'none';
+    fStep--;
+    document.getElementById('fstep-'+fStep).style.display = 'block';
+    document.getElementById('btn-back').style.visibility = fStep===1 ? 'hidden' : 'visible';
+    document.getElementById('btn-next').textContent = 'Next';
+    document.getElementById('f-progress').style.width = (fStep/fTotal*100)+'%';
+    document.getElementById('f-step-label').textContent = `Step ${fStep} of ${fTotal} — ${fLabels[fStep-1]}`;
+  }
+}
+document.querySelectorAll('.chip').forEach(c => {
+  c.addEventListener('click', function() {
+    this.closest('.chip-group').querySelectorAll('.chip').forEach(x => x.classList.remove('sel'));
+    this.classList.add('sel');
+  });
+});
+
+// ── MATCHES ──
+function filterMatches(filter, btn) {
+  document.querySelectorAll('.fchip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderMatches(filter);
+}
+
+function renderMatches(filter) {
+  const filtered = profiles.filter(p => {
+    const s = cardStates[p.id];
+    if(filter==='all') return true;
+    if(filter==='new') return s==='new';
+    if(filter==='connected') return s==='connected';
+    if(filter==='mutual') return s==='mutual';
+    return true;
+  });
+  const c = document.getElementById('match-cards');
+  if(!filtered.length) { c.innerHTML='<div class="empty-state">No matches in this filter yet.</div>'; return; }
+  c.innerHTML = filtered.map((p,i) => {
+    const s = cardStates[p.id];
+    const bg = avatarBg[i%6], tc = avatarText[i%6];
+    const init = p.name.split(' ').map(x=>x[0]).join('');
+    let actions = '';
+    if(s==='mutual') {
+      actions = `<div class="contact-box">Mutual match! You can now reach out to each other.</div>`;
+    } else if(s==='connected') {
+      actions = `<div class="match-actions"><button class="connect-btn" disabled>Request sent</button><span class="pending-badge">Waiting for them</span></div>`;
+    } else {
+      actions = `<div class="match-actions">
+        <button class="connect-btn" onclick="sendConnect(${p.id})">Send connect request</button>
+        <button class="pass-btn" onclick="passCard(${p.id})">Not interested</button>
+      </div>`;
+    }
+    return `<div class="match-card ${s==='mutual'?'mutual':''}" id="mc-${p.id}">
+      <div class="match-top">
+        <div class="avatar" style="width:48px;height:48px;background:${bg};color:${tc};font-size:16px">${init}</div>
+        <div class="match-info">
+          <div class="match-name">${p.name}</div>
+          <div class="match-meta">${p.city} · ${p.budget} · ${p.personality}</div>
+          <div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        </div>
+        <div class="match-right">
+          <div class="score-big">${p.score}%</div>
+          <div class="score-lbl">match</div>
+          <div class="score-bar"><div class="score-fill2" style="width:${p.score}%"></div></div>
+          ${s==='mutual'?'<div class="mutual-badge">Mutual</div>':''}
+        </div>
+      </div>
+      <div class="match-note">"${p.note}"</div>
+      <div class="match-sunday"><strong>Ideal Sunday:</strong> ${p.sunday}</div>
+      ${actions}
+    </div>`;
+  }).join('');
+}
+
+function sendConnect(id) {
+  cardStates[id] = 'connected';
+  renderMatches(document.querySelector('.fchip.active').textContent.toLowerCase().trim());
+  showToast('Connect request sent!');
+}
+function passCard(id) {
+  const idx = profiles.findIndex(p=>p.id===id);
+  if(idx>-1) profiles.splice(idx,1);
+  renderMatches(document.querySelector('.fchip.active').textContent.toLowerCase().trim());
+  showToast('Profile hidden.');
+}
+
+// ── REQUESTS ──
+function renderRequests() {
+  const pending = requests.filter(r=>r.status==='pending');
+  const c = document.getElementById('req-list');
+  if(!pending.length) { c.innerHTML='<div class="empty-state">No pending requests right now.</div>'; return; }
+  c.innerHTML = pending.map((r,i)=>{
+    const bg=avatarBg[i%6],tc=avatarText[i%6];
+    const init=r.name.split(' ').map(x=>x[0]).join('');
+    return `<div class="req-card" id="rc-${r.id}">
+      <div class="avatar" style="width:44px;height:44px;background:${bg};color:${tc};font-size:14px">${init}</div>
+      <div class="req-info"><div class="req-name">${r.name}</div><div class="req-meta">${r.city} · ${r.budget} · ${r.score}% match</div></div>
+      <div class="req-actions">
+        <button class="accept-btn" onclick="acceptReq(${r.id})">Accept</button>
+        <button class="reject-btn" onclick="rejectReq(${r.id})">Decline</button>
+      </div>
+    </div>`;
+  }).join('');
+  updateNotifDot();
+}
+
+function acceptReq(id) {
+  const r = requests.find(x=>x.id===id);
+  if(r) r.status='accepted';
+  const el = document.getElementById('rc-'+id);
+  if(el) el.innerHTML=`<div style="font-size:13px;color:var(--green-text);padding:6px 0;width:100%;font-weight:500">Matched with ${r.name}! Contact revealed on your matches page.</div>`;
+  updateNotifDot();
+  showToast("It's a mutual match!");
+}
+function rejectReq(id) {
+  const r = requests.find(x=>x.id===id);
+  if(r) r.status='rejected';
+  renderRequests();
+}
+function updateNotifDot() {
+  const n = requests.filter(r=>r.status==='pending').length;
+  document.getElementById('notif-dot').style.display = n>0?'block':'none';
+}
+
+// ── ADMIN ──
+function showAdminPanel(id, el) {
+  document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('ap-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  if(id==='users') renderAdminUsers(adminUsers);
+  if(id==='pairs') renderPairs();
+  if(id==='logs') renderLog('full-log',logs);
+}
+
+function renderAdminUsers(list) {
+  document.getElementById('user-tbody').innerHTML = list.map((u,i)=>{
+    const bg=avatarBg[i%6],tc=avatarText[i%6];
+    const init=u.name.split(' ').map(x=>x[0]).join('');
+    return `<tr>
+      <td><span class="avatar-sm" style="background:${bg};color:${tc}">${init}</span>${u.name}</td>
+      <td>${u.city}</td><td>${u.budget}</td><td>${u.personality}</td>
+      <td><span class="sbadge ${u.status==='Matched'?'s-matched':u.status==='Pending'?'s-pending':'s-new'}">${u.status}</span></td>
+      <td style="display:flex;gap:6px"><button class="btn btn-sm" onclick="showToast('Viewing ${u.name}')">View</button><button class="btn btn-sm btn-danger" onclick="showToast('User removed')">Remove</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterUsers() {
+  const q=document.getElementById('user-search').value.toLowerCase();
+  const city=document.getElementById('user-city').value;
+  const status=document.getElementById('user-status').value;
+  renderAdminUsers(adminUsers.filter(u=>
+    (!q||u.name.toLowerCase().includes(q))&&(!city||u.city===city)&&(!status||u.status===status)
+  ));
+}
+
+function renderPairs() {
+  document.getElementById('pairs-list').innerHTML = pairs.map((p,i)=>`
+    <div class="match-pair">
+      <span class="avatar-sm" style="background:${avatarBg[i%6]};color:${avatarText[i%6]};width:28px;height:28px;font-size:11px">${p.u1.split(' ').map(x=>x[0]).join('')}</span>
+      <span class="avatar-sm" style="background:${avatarBg[(i+2)%6]};color:${avatarText[(i+2)%6]};width:28px;height:28px;font-size:11px">${p.u2.split(' ').map(x=>x[0]).join('')}</span>
+      <div class="pair-names">${p.u1} &amp; ${p.u2}</div>
+      <div class="pair-bar-wrap"><div class="pair-bar" style="width:${p.score}%"></div></div>
+      <div class="pair-score">${p.score}%</div>
+      <div style="width:80px;text-align:right"><span class="sbadge ${p.status==='mutual'?'s-matched':p.status==='connected'?'s-mutual':'s-pending'}">${p.status}</span></div>
+      <button class="btn btn-sm" onclick="showToast('Viewing pair details')">Details</button>
+    </div>`).join('');
+}
+
+function renderLog(elId, data) {
+  document.getElementById(elId).innerHTML = data.map(l=>`
+    <div class="log-item">
+      <span class="log-time">${l.time}</span>
+      <span class="log-msg">${l.msg}</span>
+      <span class="log-type ${l.type==='match'?'log-match':l.type==='user'?'log-user':'log-system'}">${l.type}</span>
+    </div>`).join('');
+}
+
+function runMatching() {
+  const box=document.getElementById('matching-result');
+  const bar=document.getElementById('match-progress');
+  const title=document.getElementById('match-result-title');
+  const body=document.getElementById('match-result-body');
+  box.style.display='block'; bar.style.width='0%';
+  title.textContent='Matching in progress...';
+  const steps=['Reading profiles...','Filtering by city...','Scoring compatibility...','Grouping pairs above threshold...','Saving results...'];
+  let p=0;
+  const iv=setInterval(()=>{
+    p+=20; bar.style.width=p+'%';
+    body.textContent=steps[Math.floor(p/20)-1]||'';
+    if(p>=100){
+      clearInterval(iv);
+      title.textContent='Matching complete';
+      body.innerHTML='<span style="color:var(--green-text);font-weight:600">14 new pairs found</span> above threshold.';
+      showToast('Matching done — 14 pairs found!');
+    }
+  },450);
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// ── INIT ──
+updateNotifDot();
+renderLog('dash-log', logs.slice(0,4));
+</script>
+</body>
+</html>
