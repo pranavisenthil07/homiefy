@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Homiefy — Find your vibe, find your tribe</title>
+<style>
+:root {
+  --purple:#7F77DD; --purple-dark:#534AB7; --purple-light:#EEEDFE; --purple-text:#3C3489;
+  --green-light:#EAF3DE; --green-text:#3B6D11;
+  --amber-light:#FAEEDA; --amber-text:#854F0B;
+  --red-light:#FCEBEB; --red-text:#A32D2D;
+  --bg:#ffffff; --bg2:#f7f7f5; --bg3:#f0efe9;
+  --text:#1a1a1a; --text2:#6b6b6b; --text3:#9a9a9a;
+  --border:rgba(0,0,0,0.1); --border2:rgba(0,0,0,0.18);
+  --radius:8px; --radius-lg:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;}
+a{color:var(--purple);text-decoration:none;}
+
+/* AUTH */
+.auth-overlay{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;background:rgba(255,255,255,0.97);position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;}
+.auth-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:3rem 2.5rem;max-width:400px;width:100%;text-align:center;}
+.auth-logo{font-size:32px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.auth-logo span{color:var(--purple);}
+.auth-tagline{font-size:15px;color:var(--text2);margin-bottom:1.5rem;}
+.auth-desc{font-size:13px;color:var(--text2);margin-bottom:1.5rem;line-height:1.7;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:12px 20px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.15s;color:var(--text);}
+.google-btn:hover{background:var(--bg2);}
+.google-btn svg{width:20px;height:20px;flex-shrink:0;}
+.auth-note{font-size:12px;color:var(--text3);margin-top:1rem;line-height:1.6;}
+.user-pill{display:flex;align-items:center;gap:8px;padding:5px 12px;border-radius:99px;border:0.5px solid var(--border2);font-size:13px;font-weight:500;cursor:pointer;background:transparent;color:var(--text);font-family:inherit;}
+.user-pill-av{width:24px;height:24px;border-radius:50%;background:var(--purple-light);color:var(--purple);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:0.5px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100;}
+.nav-logo{font-size:22px;font-weight:700;color:var(--text);cursor:pointer;}
+.nav-logo span{color:var(--purple);}
+.nav-links{display:flex;gap:8px;align-items:center;}
+.notif-wrap{position:relative;display:inline-block;}
+.notif-dot{width:8px;height:8px;background:#E24B4A;border-radius:50%;position:absolute;top:2px;right:2px;display:none;}
+
+/* BUTTONS */
+.btn{padding:8px 18px;border-radius:var(--radius);font-size:14px;cursor:pointer;border:0.5px solid var(--border2);background:transparent;color:var(--text);font-family:inherit;transition:all 0.15s;font-weight:500;}
+.btn:hover{background:var(--bg2);}
+.btn-primary{background:var(--purple);color:#fff;border-color:var(--purple);}
+.btn-primary:hover{background:var(--purple-dark);border-color:var(--purple-dark);}
+.btn-sm{padding:5px 12px;font-size:13px;}
+.btn-danger{border-color:#E24B4A;color:var(--red-text);}
+.btn-danger:hover{background:var(--red-light);}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* HERO */
+.hero{padding:5rem 2rem 4rem;text-align:center;max-width:700px;margin:0 auto;}
+.hero-badge{display:inline-block;background:var(--purple-light);color:var(--purple-dark);font-size:13px;padding:5px 16px;border-radius:99px;margin-bottom:1.5rem;font-weight:500;}
+.hero h1{font-size:52px;font-weight:700;line-height:1.1;color:var(--text);margin-bottom:1.2rem;letter-spacing:-1px;}
+.hero h1 span{color:var(--purple);}
+.hero p{font-size:18px;color:var(--text2);line-height:1.7;margin-bottom:2rem;}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+/* FEATURES */
+.section{padding:4rem 2rem;max-width:940px;margin:0 auto;}
+.section-tag{font-size:12px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;}
+.section-title{font-size:30px;font-weight:700;color:var(--text);margin-bottom:2.5rem;}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+.feature-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;}
+.f-icon{width:40px;height:40px;background:var(--purple-light);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;}
+.f-icon svg{width:20px;height:20px;stroke:var(--purple);fill:none;stroke-width:2;}
+.feature-card h3{font-size:15px;font-weight:600;margin-bottom:6px;}
+.feature-card p{font-size:13px;color:var(--text2);line-height:1.6;}
+
+/* HOW */
+.how-section{background:var(--bg2);padding:4rem 2rem;}
+.how-inner{max-width:680px;margin:0 auto;}
+.steps{margin-top:2rem;}
+.step{display:flex;gap:16px;padding:1.2rem 0;border-bottom:0.5px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-n{width:32px;height:32px;border-radius:50%;background:var(--purple);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step h4{font-size:15px;font-weight:600;margin-bottom:4px;}
+.step p{font-size:13px;color:var(--text2);margin:0;line-height:1.6;}
+
+/* FORM */
+.form-page{max-width:580px;margin:3rem auto;padding:0 1.5rem 5rem;}
+.form-header h2{font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.form-header p{font-size:14px;color:var(--text2);margin-bottom:1.5rem;}
+.progress-wrap{height:4px;background:var(--bg3);border-radius:99px;margin-bottom:8px;}
+.progress-fill{height:100%;background:var(--purple);border-radius:99px;transition:width 0.3s;}
+.step-label{font-size:12px;color:var(--text3);margin-bottom:2rem;}
+.form-group{margin-bottom:1.25rem;}
+.form-group label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:6px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);font-size:14px;color:var(--text);font-family:inherit;transition:border 0.15s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--purple);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.chip-group{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:7px 16px;border-radius:99px;border:0.5px solid var(--border2);font-size:13px;cursor:pointer;color:var(--text);background:var(--bg);transition:all 0.15s;user-select:none;font-weight:500;}
+.chip:hover{border-color:var(--purple);color:var(--purple);}
+.chip.sel{background:var(--purple-light);border-color:var(--purple);color:var(--purple-dark);}
+.form-nav{display:flex;justify-content:space-between;margin-top:2rem;}
+
+/* MATCHES */
+.matches-page{max-width:760px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.page-title{font-size:24px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.page-sub{font-size:14px;color:var(--text2);margin-bottom:1.5rem;}
+.filter-row{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;}
+.fchip{padding:6px 16px;border-radius:99px;border:0.5px solid var(--border2);font-size:13px;cursor:pointer;color:var(--text2);background:transparent;font-family:inherit;font-weight:500;transition:all 0.15s;}
+.fchip.active{background:var(--purple-light);border-color:var(--purple);color:var(--purple-dark);}
+.match-cards{display:flex;flex-direction:column;gap:14px;}
+.match-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;transition:border 0.2s;}
+.match-card.mutual{border-color:var(--purple);border-width:1.5px;}
+.match-card.group-card{border-color:var(--purple);border-width:1.5px;}
+.match-top{display:flex;gap:14px;align-items:flex-start;}
+.avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0;}
+.match-info{flex:1;min-width:0;}
+.match-name{font-size:16px;font-weight:600;color:var(--text);}
+.match-meta{font-size:13px;color:var(--text2);margin:3px 0 10px;}
+.tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{font-size:12px;padding:3px 10px;border-radius:99px;background:var(--bg2);color:var(--text2);border:0.5px solid var(--border);}
+.match-right{text-align:right;flex-shrink:0;}
+.score-big{font-size:22px;font-weight:700;color:var(--purple);}
+.score-lbl{font-size:11px;color:var(--text3);}
+.score-bar{width:60px;height:4px;background:var(--bg3);border-radius:99px;margin:6px 0 0 auto;}
+.score-fill2{height:100%;background:var(--purple);border-radius:99px;}
+.mutual-badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:99px;background:var(--green-light);color:var(--green-text);margin-top:5px;font-weight:500;}
+.pending-badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:99px;background:var(--amber-light);color:var(--amber-text);margin-top:5px;font-weight:500;}
+.match-note{font-size:13px;color:var(--text2);margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border);font-style:italic;}
+.match-sunday{font-size:13px;color:var(--text2);margin-top:6px;}
+.match-sunday strong{color:var(--text);font-style:normal;}
+.match-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center;}
+.connect-btn{padding:8px 18px;border-radius:var(--radius);font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;background:var(--purple);color:#fff;border:none;transition:background 0.15s;}
+.connect-btn:hover{background:var(--purple-dark);}
+.connect-btn:disabled{background:var(--bg2);color:var(--text3);cursor:default;}
+.pass-btn{padding:8px 14px;border-radius:var(--radius);font-size:13px;cursor:pointer;font-family:inherit;border:0.5px solid var(--border2);background:transparent;color:var(--text2);transition:background 0.15s;}
+.pass-btn:hover{background:var(--bg2);}
+.contact-box{background:var(--green-light);border-radius:var(--radius);padding:12px 16px;font-size:13px;color:var(--green-text);margin-top:12px;font-weight:500;}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:14px;}
+.wait-state{text-align:center;padding:3rem 1rem;}
+.wait-icon{font-size:56px;margin-bottom:1rem;}
+.wait-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.wait-msg{font-size:14px;color:var(--text2);line-height:1.7;max-width:380px;margin:0 auto 1.5rem;}
+.wait-tip{background:var(--purple-light);border-radius:var(--radius);padding:12px 16px;font-size:13px;color:var(--purple-text);max-width:380px;margin:0 auto;}
+
+/* MEMBER CARD in group */
+.member-row{border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;}
+
+/* REQUESTS */
+.req-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:12px;display:flex;gap:14px;align-items:center;}
+.req-info{flex:1;}
+.req-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.req-meta{font-size:13px;color:var(--text2);}
+.req-actions{display:flex;gap:8px;flex-shrink:0;}
+.accept-btn{padding:7px 16px;border-radius:var(--radius);font-size:13px;cursor:pointer;font-family:inherit;background:var(--purple);color:#fff;border:none;font-weight:500;transition:background 0.15s;}
+.accept-btn:hover{background:var(--purple-dark);}
+.reject-btn{padding:7px 14px;border-radius:var(--radius);font-size:13px;cursor:pointer;font-family:inherit;border:0.5px solid var(--border2);background:transparent;color:var(--text2);}
+
+/* ADMIN */
+.admin-layout{display:flex;min-height:calc(100vh - 65px);}
+.sidebar{width:210px;flex-shrink:0;border-right:0.5px solid var(--border);padding:1rem 0;background:var(--bg);}
+.sidebar-section{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;padding:0.75rem 1.25rem 0.3rem;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 1.25rem;font-size:13px;cursor:pointer;color:var(--text2);border-left:2px solid transparent;transition:all 0.15s;font-weight:500;}
+.nav-item:hover{background:var(--bg2);color:var(--text);}
+.nav-item.active{color:var(--purple);background:var(--purple-light);border-left-color:var(--purple);}
+.nav-item svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0;}
+.badge-c{margin-left:auto;font-size:11px;background:var(--purple);color:#fff;border-radius:99px;padding:1px 8px;}
+.admin-main{flex:1;padding:1.75rem;background:var(--bg2);overflow:hidden;}
+.admin-panel{display:none;}
+.admin-panel.active{display:block;}
+.admin-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.admin-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.5rem;}
+.stat-card{background:var(--bg);border-radius:var(--radius);padding:1rem;border:0.5px solid var(--border);}
+.stat-label{font-size:12px;color:var(--text2);margin-bottom:6px;}
+.stat-val{font-size:28px;font-weight:700;color:var(--text);}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem;}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.card-title{font-size:14px;font-weight:600;color:var(--text);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;font-size:11px;color:var(--text2);font-weight:600;padding:8px 10px;border-bottom:0.5px solid var(--border);white-space:nowrap;text-transform:uppercase;letter-spacing:0.05em;}
+td{padding:10px 10px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg2);}
+.sbadge{font-size:11px;padding:3px 10px;border-radius:99px;font-weight:500;}
+.s-matched{background:var(--green-light);color:var(--green-text);}
+.s-pending{background:var(--amber-light);color:var(--amber-text);}
+.s-new{background:var(--bg2);color:var(--text2);}
+.avatar-sm{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;vertical-align:middle;margin-right:8px;}
+.search-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+.search-row input,.search-row select{padding:7px 12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);font-size:13px;color:var(--text);font-family:inherit;}
+.search-row input{flex:1;min-width:140px;}
+.run-box{border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;background:var(--bg);margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.run-info h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.run-info p{font-size:13px;color:var(--text2);margin:0;}
+.threshold-row{display:flex;align-items:center;gap:10px;margin-top:10px;}
+.threshold-row label{font-size:12px;color:var(--text2);}
+.threshold-val{font-size:13px;font-weight:600;color:var(--purple);min-width:36px;}
+.progress-bar2{height:4px;background:var(--bg3);border-radius:99px;margin:10px 0 6px;}
+.progress-fill2{height:100%;background:var(--purple);border-radius:99px;transition:width 0.5s;}
+.match-pair{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);}
+.match-pair:last-child{border-bottom:none;}
+.pair-names{flex:1;font-size:13px;color:var(--text);font-weight:500;}
+.pair-score{font-size:13px;font-weight:700;color:var(--purple);width:44px;text-align:right;}
+.pair-bar-wrap{width:64px;height:4px;background:var(--bg3);border-radius:99px;}
+.pair-bar{height:100%;border-radius:99px;background:var(--purple);}
+.log-item{font-size:12px;padding:6px 0;border-bottom:0.5px solid var(--border);display:flex;gap:10px;align-items:center;}
+.log-item:last-child{border-bottom:none;}
+.log-time{color:var(--text3);flex-shrink:0;width:80px;}
+.log-msg{color:var(--text);flex:1;}
+.log-type{font-size:10px;padding:2px 8px;border-radius:99px;flex-shrink:0;font-weight:500;}
+.log-match{background:var(--green-light);color:var(--green-text);}
+.log-user{background:var(--purple-light);color:var(--purple-text);}
+.log-system{background:var(--bg2);color:var(--text2);}
+
+/* RATING */
+.rating-page{max-width:480px;margin:3rem auto;padding:0 1.5rem 5rem;text-align:center;}
+.stars-wrap{display:flex;gap:12px;justify-content:center;margin-bottom:2rem;}
+.star{width:48px;height:48px;cursor:pointer;transition:transform 0.15s;}
+.star:hover{transform:scale(1.2);}
+.star svg{width:100%;height:100%;}
+.rating-q{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:14px;text-align:left;}
+.rating-q label{font-size:14px;font-weight:500;color:var(--text);display:block;margin-bottom:10px;}
+.rating-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.rating-chip{padding:6px 14px;border-radius:99px;border:0.5px solid var(--border2);font-size:13px;cursor:pointer;color:var(--text2);background:transparent;font-family:inherit;transition:all 0.15s;}
+.rating-chip.sel{background:var(--purple-light);border-color:var(--purple);color:var(--purple-dark);font-weight:500;}
+.rating-textarea{width:100%;padding:10px 14px;border-radius:var(--radius);border:0.5px solid var(--border2);font-size:14px;color:var(--text);font-family:inherit;resize:vertical;min-height:80px;margin-top:6px;}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:999;pointer-events:none;}
+.toast{background:#1a1a1a;color:#fff;padding:12px 24px;border-radius:var(--radius);font-size:14px;opacity:0;transition:opacity 0.3s;white-space:nowrap;font-weight:500;}
+.toast.show{opacity:1;}
+
+@media(max-width:640px){
+  .hero h1{font-size:28px;letter-spacing:-0.5px;line-height:1.2;}
+  .hero p{font-size:15px;}
+  .hero{padding:3rem 1.5rem 2.5rem;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .nav{padding:1rem;}
+  .admin-layout{flex-direction:column;}
+  .sidebar{width:100%;border-right:none;border-bottom:0.5px solid var(--border);display:flex;flex-wrap:wrap;padding:0.5rem;gap:4px;}
+  .sidebar-section{display:none;}
+  .nav-item{padding:7px 10px;border-left:none;border-bottom:2px solid transparent;font-size:12px;}
+  .nav-item.active{border-left:none;border-bottom-color:var(--purple);background:transparent;}
+}
+</style>
+</head>
+<body>
+
+<div class="toast-wrap"><div class="toast" id="toast"></div></div>
+
+<!-- AUTH OVERLAY -->
+<div id="auth-section" style="display:none">
+  <div class="auth-overlay">
+    <div class="auth-card">
+      <div class="auth-logo">homie<span>fy</span></div>
+      <div class="auth-tagline">Find your <span style="color:#7F77DD">vibe</span>, find your <span style="color:#7F77DD">tribe</span></div>
+      <div class="auth-desc">Find compatible roommates from your college — same energy, same habits, same wavelength.</div>
+      <button class="google-btn" id="signin-btn" onclick="signInWithGoogle()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+      <div class="auth-note">Use your college email. By signing in you agree to our terms.</div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="main-nav" style="display:none">
+  <div class="nav-logo" onclick="showPage('landing')">homie<span>fy</span></div>
+  <div class="nav-links">
+    <div class="notif-wrap">
+      <button class="btn btn-sm" onclick="showPage('requests');loadRequests()">Requests</button>
+      <div class="notif-dot" id="notif-dot"></div>
+    </div>
+    <button class="btn btn-sm" onclick="showPage('matches');loadMatches()">My matches</button>
+    <button class="btn btn-sm" id="admin-nav-btn" style="display:none" onclick="showPage('admin');loadAdminUsers()">Admin</button>
+    <button class="user-pill" onclick="signOutUser()">
+      <div class="user-pill-av" id="user-avatar-nav">U</div>
+      <span id="user-name-nav">User</span>
+    </button>
+  </div>
+</nav>
+
+<!-- LANDING -->
+<div class="page active" id="page-landing">
+  <div class="hero">
+    <div class="hero-badge">AI shortlists. You choose.</div>
+    <h1>Find your <span>vibe</span>,<br>find your <span>tribe</span></h1>
+    <p>Homiefy matches you with roommates who actually get you — same energy, same habits, same wavelength.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" onclick="showPage('form')">Find my roommate</button>
+      <button class="btn" onclick="showPage('matches');loadMatches()">Browse matches</button>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-tag">Why Homiefy</div>
+    <div class="section-title">Matching beyond just location</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="f-icon"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zM4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+        <h3>Vibe matching</h3>
+        <p>AI reads your lifestyle and habits to find people you'd actually enjoy living with.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>You're in control</h3>
+        <p>AI gives you a shortlist. You browse, connect, and choose. No pressure, no spam.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <h3>Mutual match only</h3>
+        <p>Contact details revealed only when both sides connect. Safe and private always.</p>
+      </div>
+      <div class="feature-card">
+        <div class="f-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Group matching</h3>
+        <p>Looking for 3 or 4 sharing? AI groups compatible people together automatically.</p>
+      </div>
+    </div>
+  </div>
+  <div class="how-section">
+    <div class="how-inner">
+      <div class="section-tag" style="text-align:center">How it works</div>
+      <div class="section-title" style="text-align:center;margin-bottom:0">Four steps to your perfect roommate</div>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div><h4>Fill your profile</h4><p>Your habits, schedule, budget, sharing type and vibe — takes about 3 minutes.</p></div></div>
+        <div class="step"><div class="step-n">2</div><div><h4>AI builds your shortlist</h4><p>Only 70%+ compatible profiles shown. For group sharing, AI groups compatible people.</p></div></div>
+        <div class="step"><div class="step-n">3</div><div><h4>Browse &amp; connect</h4><p>Read their note and ideal Sunday. Send a connect request if they feel right.</p></div></div>
+        <div class="step"><div class="step-n">4</div><div><h4>Mutual match = contact revealed</h4><p>When both sides connect, phone and email are unlocked. Say hello!</p></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="page" id="page-form">
+  <div class="form-page">
+    <div class="form-header">
+      <h2>Create your profile</h2>
+      <p>Takes about 3 minutes. Be honest — it helps us find your best match!</p>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="f-progress" style="width:20%"></div></div>
+    <div class="step-label" id="f-step-label">Step 1 of 5 — Basic info</div>
+
+    <div id="fstep-1">
+      <div class="form-group" style="text-align:center;margin-bottom:1.5rem">
+        <label style="display:block;margin-bottom:8px">Profile photo</label>
+        <div onclick="document.getElementById('profile-pic-input').click()" style="width:90px;height:90px;border-radius:50%;background:#EEEDFE;margin:0 auto 6px;cursor:pointer;display:flex;align-items:center;justify-content:center;border:2px dashed #7F77DD;overflow:hidden;position:relative">
+          <svg id="profile-pic-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7F77DD" stroke-width="1.5"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zM4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <img id="profile-pic-preview" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0"/>
+        </div>
+        <div style="font-size:12px;color:#9a9a9a">Tap to upload photo</div>
+        <input type="file" id="profile-pic-input" accept="image/*" style="display:none" onchange="previewProfilePic(this)"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Full name</label><input type="text" placeholder="Your name" id="f-name"/></div>
+        <div class="form-group"><label>Age</label><input type="number" placeholder="20" id="f-age"/></div>
+      </div>
+      <div class="form-group"><label>Contact number</label><input type="tel" placeholder="+91 98765 43210" id="f-phone"/></div>
+      <div class="form-group"><label>Gender</label>
+        <div class="chip-group" id="cg-gender">
+          <div class="chip" data-val="male">Male</div>
+          <div class="chip" data-val="female">Female</div>
+          <div class="chip" data-val="other">Other</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Year of study</label>
+        <div class="chip-group" id="cg-year">
+          <div class="chip" data-val="1st">1st year</div>
+          <div class="chip" data-val="2nd">2nd year</div>
+          <div class="chip" data-val="3rd">3rd year</div>
+          <div class="chip" data-val="4th">4th year</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Degree</label><input type="text" placeholder="B.Tech, BCA..." id="f-degree"/></div>
+        <div class="form-group"><label>Department</label><input type="text" placeholder="CSE, ECE..." id="f-dept"/></div>
+      </div>
+    </div>
+
+    <div id="fstep-2" style="display:none">
+      <div class="form-group"><label>Preferred area / locality</label><input type="text" placeholder="Area name (apartment / PG / hostel)" id="f-area"/></div>
+      <div class="form-group"><label>Budget (per person / month)</label>
+        <div class="chip-group" id="cg-budget">
+          <div class="chip" data-val="10k">Under ₹10k</div>
+          <div class="chip" data-val="15k">₹10k–15k</div>
+          <div class="chip" data-val="20k">₹15k–20k</div>
+          <div class="chip" data-val="30k">₹20k–30k</div>
+          <div class="chip" data-val="35k">₹30k–35k</div>
+          <div class="chip" data-val="35k+">₹35k+</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Type of sharing</label>
+        <div class="chip-group" id="cg-sharing">
+          <div class="chip" data-val="2">2 sharing</div>
+          <div class="chip" data-val="3">3 sharing</div>
+          <div class="chip" data-val="4">4 sharing</div>
+          <div class="chip" data-val="5">5 sharing</div>
+          <div class="chip" data-val="6+">6+ sharing</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Move-in date</label><input type="date" id="f-movein"/></div>
+      <div class="form-group"><label>Your situation</label>
+        <div class="chip-group" id="cg-situation">
+          <div class="chip" data-val="have">I have a place, looking for roommates</div>
+          <div class="chip" data-val="need">I need a place &amp; roommates</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Gender preference for roommate</label>
+        <div class="chip-group" id="cg-genderpref">
+          <div class="chip" data-val="same">Same gender only</div>
+          <div class="chip" data-val="any">No preference</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fstep-3" style="display:none">
+      <div class="form-group"><label>Cleanliness level</label>
+        <div class="chip-group" id="cg-clean">
+          <div class="chip" data-val="ocd">OCD clean</div>
+          <div class="chip" data-val="very">Very clean</div>
+          <div class="chip" data-val="normal">Clean but not strict</div>
+          <div class="chip" data-val="messy">Messy is fine</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Sleep schedule</label>
+        <div class="chip-group" id="cg-sleep">
+          <div class="chip" data-val="morning">Morning person</div>
+          <div class="chip" data-val="night">Night owl</div>
+          <div class="chip" data-val="flex">Flexible</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Noise preference at home</label>
+        <div class="chip-group" id="cg-noise">
+          <div class="chip" data-val="quiet">Prefer quiet</div>
+          <div class="chip" data-val="some">Some noise is fine</div>
+          <div class="chip" data-val="lively">Love a lively home</div>
+        </div>
+      </div>
+      <div class="form-group"><label>How social are you at home?</label>
+        <div class="chip-group" id="cg-social">
+          <div class="chip" data-val="out_often">I go out often</div>
+          <div class="chip" data-val="sometimes">Go out sometimes</div>
+          <div class="chip" data-val="stay_home">Stay home mostly</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Cooking</label>
+        <div class="chip-group" id="cg-cook">
+          <div class="chip" data-val="self">Cook ourselves</div>
+          <div class="chip" data-val="maid">Hire a maid</div>
+          <div class="chip" data-val="order">Order food mostly</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fstep-4" style="display:none">
+      <div class="form-group"><label>Personality</label>
+        <div class="chip-group" id="cg-personality">
+          <div class="chip" data-val="introvert">Introvert</div>
+          <div class="chip" data-val="ambivert">Ambivert</div>
+          <div class="chip" data-val="extrovert">Extrovert</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Alcohol</label>
+        <div class="chip-group" id="cg-alcohol">
+          <div class="chip" data-val="yes">I consume alcohol</div>
+          <div class="chip" data-val="no">I don't</div>
+          <div class="chip" data-val="ok">I don't but it's okay</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Smoking</label>
+        <div class="chip-group" id="cg-smoke">
+          <div class="chip" data-val="yes">I smoke</div>
+          <div class="chip" data-val="no">I don't smoke</div>
+          <div class="chip" data-val="ok">Don't but it's okay</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Parties / guests</label>
+        <div class="chip-group" id="cg-parties">
+          <div class="chip" data-val="yes">Occasional house parties</div>
+          <div class="chip" data-val="no">No parties please</div>
+          <div class="chip" data-val="rare">Rare gatherings are fine</div>
+        </div>
+      </div>
+      <div class="form-group"><label>Languages you're comfortable with</label>
+        <div class="chip-group" id="cg-lang">
+          <div class="chip" data-val="malayalam">Malayalam</div>
+          <div class="chip" data-val="tamil">Tamil</div>
+          <div class="chip" data-val="kannada">Kannada</div>
+          <div class="chip" data-val="telugu">Telugu</div>
+          <div class="chip" data-val="hindi">Hindi</div>
+          <div class="chip" data-val="english">English</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fstep-5" style="display:none">
+      <div class="form-group"><label>Native place</label><input type="text" placeholder="Chennai, Madurai..." id="f-native"/></div>
+      <div class="form-group"><label>Your ideal Sunday at home</label><textarea placeholder="Describe your perfect lazy Sunday..." id="f-sunday"></textarea></div>
+      <div class="form-group"><label>One dealbreaker</label><input type="text" placeholder="Something you absolutely cannot tolerate..." id="f-deal"/></div>
+      <div class="form-group"><label>A small note for your roommate</label><textarea placeholder="Hey future roommate! A little about me..." id="f-note"></textarea></div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn" id="btn-back" onclick="formBack()" style="visibility:hidden">Back</button>
+      <button class="btn btn-primary" id="btn-next" onclick="formNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- MATCHES -->
+<div class="page" id="page-matches">
+  <div class="matches-page">
+    <div class="page-title">Your shortlist</div>
+    <div class="page-sub">AI-filtered matches — browse and connect with whoever feels right.</div>
+    <div class="filter-row">
+      <button class="fchip active" onclick="filterMatches('all',this)">All</button>
+      <button class="fchip" onclick="filterMatches('new',this)">New</button>
+      <button class="fchip" onclick="filterMatches('connected',this)">Requested</button>
+      <button class="fchip" onclick="filterMatches('mutual',this)">Mutual</button>
+    </div>
+    <div class="match-cards" id="match-cards">
+      <div class="wait-state">
+        <div class="wait-icon">⏳</div>
+        <div class="wait-title">Loading your matches...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REQUESTS -->
+<div class="page" id="page-requests">
+  <div class="matches-page">
+    <div class="page-title">Connect requests</div>
+    <div class="page-sub">People who want to connect with you. Accept to reveal contact details.</div>
+    <div id="req-list"><div class="empty-state">Loading...</div></div>
+  </div>
+</div>
+
+<!-- RATING -->
+<div class="page" id="page-rating">
+  <div class="rating-page">
+    <div style="font-size:48px;margin-bottom:1rem">🏠</div>
+    <h2 style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px">How was your experience?</h2>
+    <p style="font-size:14px;color:var(--text2);margin-bottom:2rem">You connected with a roommate 7 days ago — tell us how it went!</p>
+    <div class="stars-wrap" id="stars-wrap">
+      <div class="star" onclick="rateStar(1)" id="star-1"><svg viewBox="0 0 24 24" fill="none" stroke="#7F77DD" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="star" onclick="rateStar(2)" id="star-2"><svg viewBox="0 0 24 24" fill="none" stroke="#7F77DD" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="star" onclick="rateStar(3)" id="star-3"><svg viewBox="0 0 24 24" fill="none" stroke="#7F77DD" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="star" onclick="rateStar(4)" id="star-4"><svg viewBox="0 0 24 24" fill="none" stroke="#7F77DD" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="star" onclick="rateStar(5)" id="star-5"><svg viewBox="0 0 24 24" fill="none" stroke="#7F77DD" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+    </div>
+    <div class="rating-q"><label>Did Homiefy help you find the right match?</label><div class="rating-chips"><button class="rating-chip" onclick="rateChip(this,'match_help')">Yes, definitely!</button><button class="rating-chip" onclick="rateChip(this,'match_help')">Somewhat</button><button class="rating-chip" onclick="rateChip(this,'match_help')">Not really</button></div></div>
+    <div class="rating-q"><label>How was the compatibility score accuracy?</label><div class="rating-chips"><button class="rating-chip" onclick="rateChip(this,'score_acc')">Very accurate</button><button class="rating-chip" onclick="rateChip(this,'score_acc')">Mostly accurate</button><button class="rating-chip" onclick="rateChip(this,'score_acc')">Needs improvement</button></div></div>
+    <div class="rating-q"><label>Would you recommend Homiefy to a friend?</label><div class="rating-chips"><button class="rating-chip" onclick="rateChip(this,'recommend')">100% yes!</button><button class="rating-chip" onclick="rateChip(this,'recommend')">Maybe</button><button class="rating-chip" onclick="rateChip(this,'recommend')">Not sure</button></div></div>
+    <div class="rating-q"><label>Any feedback for us? (optional)</label><textarea class="rating-textarea" id="rating-feedback" placeholder="Tell us what you loved or what we can improve..."></textarea></div>
+    <button class="btn btn-primary" style="width:100%;padding:14px;margin-top:1rem" onclick="submitRating()">Submit feedback</button>
+    <button class="btn" style="width:100%;padding:12px;margin-top:10px" onclick="showPage('matches')">Skip for now</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div id="admin-blocked" style="display:none;text-align:center;padding:5rem 2rem">
+    <div style="font-size:48px;margin-bottom:1rem">🔒</div>
+    <div style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px">Access denied</div>
+    <div style="font-size:14px;color:var(--text2);margin-bottom:2rem">This page is only for Homiefy admins.</div>
+    <button class="btn btn-primary" onclick="showPage('matches')">Back to matches</button>
+  </div>
+  <div class="admin-layout" id="admin-content" style="display:none">
+    <div class="sidebar">
+      <div class="sidebar-section">Main</div>
+      <div class="nav-item active" onclick="showAdminPanel('dashboard',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard
+      </div>
+      <div class="nav-item" onclick="showAdminPanel('users',this);loadAdminUsers()">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Users <span class="badge-c" id="users-count">0</span>
+      </div>
+      <div class="sidebar-section">Matching</div>
+      <div class="nav-item" onclick="showAdminPanel('matching',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Run matching
+      </div>
+      <div class="nav-item" onclick="showAdminPanel('pairs',this)">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>Match pairs
+      </div>
+      <div class="sidebar-section">System</div>
+      <div class="nav-item" onclick="showAdminPanel('logs',this)">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>Activity log
+      </div>
+    </div>
+    <div class="admin-main">
+      <div class="admin-panel active" id="ap-dashboard">
+        <div class="admin-title">Dashboard</div>
+        <div class="admin-sub">Overview of Homiefy — live stats from Firebase.</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-label">Total users</div><div class="stat-val" id="stat-total">0</div></div>
+          <div class="stat-card"><div class="stat-label">Active users</div><div class="stat-val" id="stat-active">0</div></div>
+          <div class="stat-card"><div class="stat-label">Connect requests</div><div class="stat-val" id="stat-connects">0</div></div>
+          <div class="stat-card"><div class="stat-label">Mutual matches</div><div class="stat-val" id="stat-mutual">0</div></div>
+        </div>
+        <div class="card"><div class="card-head"><span class="card-title">Recent activity</span></div><div id="dash-log"><div style="font-size:13px;color:var(--text2);padding:1rem 0">No activity yet.</div></div></div>
+      </div>
+
+      <div class="admin-panel" id="ap-users">
+        <div class="admin-title">All users</div>
+        <div class="admin-sub">Every profile registered on Homiefy — all details from Firebase.</div>
+        <div class="search-row">
+          <input type="text" placeholder="Search by name or email..." id="user-search" oninput="filterUsers()"/>
+          <select id="user-status-filter" onchange="filterUsers()"><option value="">All</option><option value="2">2 sharing</option><option value="3">3 sharing</option><option value="4">4 sharing</option></select>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
+          <table id="user-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Area</th><th>Budget</th><th>Sharing</th><th>Year</th><th>Dept</th><th>Personality</th><th>Cleanliness</th><th>Sleep</th><th>Smoking</th><th>Alcohol</th><th>Language</th><th>Note</th><th>Joined</th></tr></thead>
+            <tbody id="user-tbody"><tr><td colspan="16" style="text-align:center;padding:2rem;color:var(--text2)">Loading users...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-panel" id="ap-matching">
+        <div class="admin-title">Run AI matching</div>
+        <div class="admin-sub">Trigger the matching engine across all users.</div>
+        <div class="run-box">
+          <div class="run-info">
+            <h4>Minimum compatibility threshold</h4>
+            <p>Only pairs scoring above this will be suggested.</p>
+            <div class="threshold-row">
+              <label>Threshold</label>
+              <input type="range" min="50" max="95" step="5" value="70" id="threshold" oninput="document.getElementById('thresh-val').textContent=this.value+'%'"/>
+              <span class="threshold-val" id="thresh-val">70%</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="runMatching()">Run matching now</button>
+        </div>
+        <div class="card" id="matching-result" style="display:none">
+          <div class="card-head"><span class="card-title" id="match-result-title">Matching in progress...</span></div>
+          <div class="progress-bar2"><div class="progress-fill2" id="match-progress" style="width:0%"></div></div>
+          <div id="match-result-body" style="font-size:13px;color:var(--text2);margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div class="admin-panel" id="ap-pairs">
+        <div class="admin-title">Match pairs</div>
+        <div class="admin-sub">All connect requests between users.</div>
+        <div class="card"><div id="pairs-list"><div style="font-size:13px;color:var(--text2);padding:1rem 0">Loading pairs...</div></div></div>
+      </div>
+
+      <div class="admin-panel" id="ap-logs">
+        <div class="admin-title">Activity log</div>
+        <div class="admin-sub">All user signups and connect events.</div>
+        <div class="card"><div id="full-log"><div style="font-size:13px;color:var(--text2);padding:1rem 0">No activity yet.</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const ADMIN_EMAIL = 'homiefy.15@gmail.com';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC8dh0TYDn-nl2l5tIUfPEIyvr2zzGKgis",
+  authDomain: "homiefy-d3db6.firebaseapp.com",
+  projectId: "homiefy-d3db6",
+  storageBucket: "homiefy-d3db6.firebasestorage.app",
+  messagingSenderId: "397166963678",
+  appId: "1:397166963678:web:3ba2e6b21ee79b23ac0b4f",
+  measurementId: "G-NF6N5VTZ9J"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+let currentUser = null;
+let currentProfile = null;
+let allAdminUsers = [];
+
+// ── AUTH ──
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('main-nav').style.display = 'flex';
+    document.getElementById('user-avatar-nav').textContent = user.displayName ? user.displayName[0].toUpperCase() : 'U';
+    document.getElementById('user-name-nav').textContent = user.displayName || user.email;
+    if (user.email === ADMIN_EMAIL) {
+      document.getElementById('admin-nav-btn').style.display = 'inline-block';
+    }
+    showPage('landing');
+    await checkExistingProfile(user.uid);
+  } else {
+    currentUser = null; currentProfile = null;
+    document.getElementById('auth-section').style.display = 'flex';
+    document.getElementById('main-nav').style.display = 'none';
+    showPage('landing');
+  }
+});
+
+async function checkExistingProfile(uid) {
+  try {
+    const q = query(collection(db, 'profiles'), where('uid', '==', uid));
+    const snap = await getDocs(q);
+    if (!snap.empty) {
+      currentProfile = { id: snap.docs[0].id, ...snap.docs[0].data() };
+      showPage('matches');
+      loadMatches();
+    } else {
+      showPage('landing');
+    }
+  } catch(e) {
+    console.error(e);
+    showPage('landing');
+  }
+}
+
+window.signInWithGoogle = async function() {
+  try {
+    document.getElementById('signin-btn').textContent = 'Signing in...';
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    document.getElementById('signin-btn').innerHTML = 'Continue with Google';
+    showToast('Sign in failed. Please try again.');
+  }
+};
+
+window.signOutUser = async function() {
+  await signOut(auth);
+  showToast('Signed out!');
+};
+
+// ── SAVE PROFILE ──
+window.saveProfile = async function(profileData) {
+  if (!currentUser) return;
+  try {
+    showToast('Saving your profile...');
+    const docRef = await addDoc(collection(db, 'profiles'), {
+      ...profileData,
+      uid: currentUser.uid,
+      email: currentUser.email,
+      displayName: currentUser.displayName,
+      createdAt: new Date().toISOString()
+    });
+    currentProfile = { id: docRef.id, ...profileData, uid: currentUser.uid, email: currentUser.email };
+    showToast('Profile saved! Finding your matches...');
+    showPage('matches');
+    loadMatches();
+  } catch(e) {
+    console.error(e);
+    showToast('Error saving profile. Please try again.');
+  }
+};
+
+// ── SCORING ──
+function computeScore(a, b) {
+  let score = 0;
+  const budgetTiers = ['10k','15k','20k','30k','35k','35k+'];
+  const cleanTiers = ['ocd','very','normal','messy'];
+  function tierScore(va, vb, tiers) {
+    const ai = tiers.indexOf(va), bi = tiers.indexOf(vb);
+    if(ai===-1||bi===-1) return 0.5;
+    const d = Math.abs(ai-bi);
+    return d===0?1:d===1?0.6:0;
+  }
+  function habitScore(va, vb) {
+    if(va===vb) return 1;
+    if((va==='yes'&&vb==='ok')||(vb==='yes'&&va==='ok')) return 1;
+    return 0;
+  }
+  function persScore(va, vb) {
+    if(va===vb) return 1;
+    if(va==='ambivert'||vb==='ambivert') return 0.8;
+    return 0.3;
+  }
+  score += tierScore(a.budget, b.budget, budgetTiers) * 22;
+  score += tierScore(a.cleanliness, b.cleanliness, cleanTiers) * 20;
+  score += habitScore(a.smoking, b.smoking) * 15;
+  score += habitScore(a.alcohol, b.alcohol) * 10;
+  score += (a.sleep===b.sleep||a.sleep==='flex'||b.sleep==='flex'?1:0) * 13;
+  score += persScore(a.personality, b.personality) * 8;
+  score += (a.parties===b.parties?1:0.2) * 5;
+  if(a.sharing && b.sharing) {
+    score += (a.sharing===b.sharing?1:Math.abs((parseInt(a.sharing)||2)-(parseInt(b.sharing)||2))<=1?0.5:0) * 7;
+  }
+  return Math.round(score);
+}
+
+// ── LOAD MATCHES ──
+window.loadMatches = async function() {
+  if (!currentUser || !currentProfile) return;
+  const c = document.getElementById('match-cards');
+  c.innerHTML = '<div class="wait-state"><div class="wait-icon">⏳</div><div class="wait-title">Finding your matches...</div></div>';
+  try {
+    const snap = await getDocs(collection(db, 'profiles'));
+    const allProfiles = [];
+    snap.forEach(d => { if (d.data().uid !== currentUser.uid) allProfiles.push({ id: d.id, ...d.data() }); });
+
+    const mySharing = parseInt(currentProfile.sharing) || 2;
+    const sameSharing = allProfiles.filter(p => {
+      const ps = parseInt(p.sharing) || 2;
+      return Math.abs(ps - mySharing) <= 1;
+    });
+
+    const scored = sameSharing
+      .map(p => ({ ...p, score: computeScore(currentProfile, p) }))
+      .filter(p => p.score >= 60)
+      .sort((a, b) => b.score - a.score);
+
+    if (scored.length === 0) {
+      c.innerHTML = `
+        <div class="wait-state">
+          <div class="wait-icon">🕐</div>
+          <div class="wait-title">Hang tight!</div>
+          <div class="wait-msg">We're still building your community. Come back soon — new students are joining every day!</div>
+          <div class="wait-tip">💡 Share Homiefy with your college friends to get matches faster!</div>
+        </div>`;
+      return;
+    }
+
+    const groups = buildGroups(scored, mySharing);
+    renderGroups(groups, mySharing);
+  } catch(e) {
+    console.error(e);
+    c.innerHTML = '<div class="empty-state">Could not load matches. Please refresh.</div>';
+  }
+};
+
+function buildGroups(scored, sharingNum) {
+  const needed = sharingNum - 1;
+  if (needed <= 1) return scored.map(p => ({ members:[p], groupScore:p.score }));
+  const groups = [], used = new Set();
+  for (let i = 0; i < scored.length; i++) {
+    if (used.has(scored[i].id)) continue;
+    const group = [scored[i]];
+    for (let j = i+1; j < scored.length && group.length < needed; j++) {
+      if (used.has(scored[j].id)) continue;
+      if (computeScore(scored[i], scored[j]) >= 55) group.push(scored[j]);
+    }
+    if (group.length === needed) {
+      const avg = Math.round(group.reduce((s,p)=>s+p.score,0)/group.length);
+      groups.push({ members:group, groupScore:avg });
+      group.forEach(p => used.add(p.id));
+    }
+  }
+  scored.forEach(p => { if (!used.has(p.id)) groups.push({ members:[p], groupScore:p.score }); });
+  return groups.sort((a,b) => b.groupScore - a.groupScore);
+}
+
+function renderGroups(groups, sharingNum) {
+  const avatarBg = ['#EEEDFE','#E1F5EE','#FAECE7','#E6F1FB','#FAEEDA','#FBEAF0'];
+  const avatarText = ['#534AB7','#0F6E56','#993C1D','#185FA5','#854F0B','#993556'];
+  const c = document.getElementById('match-cards');
+  c.innerHTML = groups.map((group, gi) => {
+    const isGroup = group.members.length > 1;
+    const score = group.groupScore;
+    if (isGroup) {
+      const avatarsHtml = group.members.map((p,mi) => {
+        const bg=avatarBg[mi%6],tc=avatarText[mi%6];
+        const nm=p.name||'Student';
+        const init=nm.split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();
+        const pic=p.profilePic ? `<img src="${p.profilePic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>` : init;
+        return `<div style="width:44px;height:44px;border-radius:50%;background:${bg};color:${tc};font-size:13px;font-weight:600;border:2px solid #fff;margin-left:${mi>0?'-10px':'0'};position:relative;z-index:${10-mi};display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">${pic}</div>`;
+      }).join('');
+      const membersHtml = group.members.map((p,mi) => {
+        const bg=avatarBg[mi%6],tc=avatarText[mi%6];
+        const nm=p.name||'Student';
+        const init=nm.split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();
+        return `<div class="member-row">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <div style="width:36px;height:36px;border-radius:50%;background:${bg};color:${tc};font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden">
+              ${p.profilePic ? '<img src="'+p.profilePic+'" style="width:100%;height:100%;object-fit:cover"/>' : init}
+            </div>
+            <div style="flex:1">
+              <div style="font-size:14px;font-weight:600;color:var(--text)">${nm}</div>
+              <div style="font-size:12px;color:var(--text2)">${p.area||''} · ${p.budget||''} · ${p.year||''} year</div>
+            </div>
+            <div style="font-size:14px;font-weight:700;color:#7F77DD">${p.score}%</div>
+          </div>
+          <div class="tags" style="margin-bottom:8px">
+            ${p.cleanliness ? '<span class="tag">'+p.cleanliness+'</span>' : ''}
+            ${p.sleep ? '<span class="tag">'+p.sleep+'</span>' : ''}
+            ${p.personality ? '<span class="tag">'+p.personality+'</span>' : ''}
+            ${p.smoking==='no' ? '<span class="tag">non-smoker</span>' : ''}
+          </div>
+          ${p.note ? '<div style="font-size:12px;color:var(--text2);font-style:italic;margin-bottom:8px">"'+p.note+'"</div>' : ''}
+          <button class="connect-btn" style="width:100%;font-size:13px" onclick="sendConnect('${p.id}','${nm.replace(/'/g,"\\'")}','${(p.email||'').replace(/'/g,"\\'")}')">Connect with ${nm.split(' ')[0]}</button>
+        </div>`;
+      }).join('');
+      return `<div class="match-card group-card">
+        <div class="match-top" style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center">${avatarsHtml}</div>
+          <div class="match-info" style="margin-left:12px">
+            <div class="match-name">${sharingNum}-sharing group</div>
+            <div class="match-meta">${group.members.map(p=>(p.name||'Student').split(' ')[0]).join(' · ')}</div>
+            <span class="mutual-badge">${sharingNum} sharing</span>
+          </div>
+          <div class="match-right">
+            <div class="score-big">${score}%</div>
+            <div class="score-lbl">group match</div>
+            <div class="score-bar"><div class="score-fill2" style="width:${score}%"></div></div>
+          </div>
+        </div>
+        ${membersHtml}
+      </div>`;
+    } else {
+      const p = group.members[0];
+      const bg=avatarBg[gi%6],tc=avatarText[gi%6];
+      const name=p.name||p.displayName||'Student';
+      const init=name.split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();
+      const pic=p.profilePic ? `<img src="${p.profilePic}" style="width:100%;height:100%;object-fit:cover"/>` : init;
+      return `<div class="match-card" id="mc-${p.id}">
+        <div class="match-top">
+          <div class="avatar" style="width:48px;height:48px;background:${bg};color:${tc};font-size:16px;overflow:hidden">${pic}</div>
+          <div class="match-info">
+            <div class="match-name">${name}</div>
+            <div class="match-meta">${p.area||'College area'} · ${p.budget||''} · ${p.personality||''}</div>
+            <div class="tags">
+              ${p.cleanliness ? '<span class="tag">'+p.cleanliness+'</span>' : ''}
+              ${p.sleep ? '<span class="tag">'+p.sleep+' person</span>' : ''}
+              ${p.smoking==='no' ? '<span class="tag">non-smoker</span>' : ''}
+              ${p.year ? '<span class="tag">'+p.year+' year</span>' : ''}
+              ${p.sharing ? '<span class="tag">'+p.sharing+' sharing</span>' : ''}
+            </div>
+          </div>
+          <div class="match-right">
+            <div class="score-big">${score}%</div>
+            <div class="score-lbl">match</div>
+            <div class="score-bar"><div class="score-fill2" style="width:${score}%"></div></div>
+          </div>
+        </div>
+        ${p.note ? '<div class="match-note">"'+p.note+'"</div>' : ''}
+        ${p.sunday ? '<div class="match-sunday"><strong>Ideal Sunday:</strong> '+p.sunday+'</div>' : ''}
+        <div class="match-actions">
+          <button class="connect-btn" onclick="sendConnect('${p.id}','${name.replace(/'/g,"\\'")}','${(p.email||'').replace(/'/g,"\\'")}')">Send connect request</button>
+          <button class="pass-btn" onclick="document.getElementById('mc-${p.id}').remove()">Not interested</button>
+        </div>
+      </div>`;
+    }
+  }).join('');
+}
+
+// ── CONNECT ──
+window.sendConnect = async function(targetId, targetName, targetEmail) {
+  if (!currentUser || !currentProfile) return;
+  try {
+    await addDoc(collection(db, 'connects'), {
+      fromUid: currentUser.uid,
+      fromName: currentProfile.name || currentUser.displayName,
+      fromEmail: currentUser.email,
+      fromPhone: currentProfile.phone || '',
+      toId: targetId,
+      toName: targetName,
+      toEmail: targetEmail,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    });
+    showToast('Connect request sent to ' + targetName + '!');
+    localStorage.setItem('homiefy_connect_date', Date.now().toString());
+    loadRequests();
+  } catch(e) { showToast('Error sending request. Try again.'); }
+};
+
+// ── REQUESTS ──
+window.loadRequests = async function() {
+  if (!currentUser) return;
+  try {
+    const snap = await getDocs(collection(db, 'connects'));
+    const incoming = [];
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.toEmail === currentUser.email && data.status === 'pending') {
+        incoming.push({ id: d.id, ...data });
+      }
+    });
+    renderRequests(incoming);
+    document.getElementById('notif-dot').style.display = incoming.length > 0 ? 'block' : 'none';
+  } catch(e) { console.error(e); }
+};
+
+function renderRequests(reqs) {
+  const avatarBg = ['#EEEDFE','#E1F5EE','#FAECE7'];
+  const avatarText = ['#534AB7','#0F6E56','#993C1D'];
+  const c = document.getElementById('req-list');
+  if (!reqs.length) { c.innerHTML = '<div class="empty-state">No pending requests right now.</div>'; return; }
+  c.innerHTML = reqs.map((r,i) => {
+    const init=(r.fromName||'ST').split(' ').map(x=>x[0]).join('').toUpperCase();
+    return `<div class="req-card" id="rc-${r.id}">
+      <div class="avatar" style="width:44px;height:44px;background:${avatarBg[i%3]};color:${avatarText[i%3]};font-size:14px">${init}</div>
+      <div class="req-info">
+        <div class="req-name">${r.fromName||'Student'}</div>
+        <div class="req-meta">${r.fromEmail||''}</div>
+      </div>
+      <div class="req-actions">
+        <button class="accept-btn" onclick="acceptReq('${r.id}','${(r.fromName||'').replace(/'/g,"\\'")}','${r.fromEmail||''}','${r.fromPhone||''}')">Accept</button>
+        <button class="reject-btn" onclick="rejectReq('${r.id}')">Decline</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.acceptReq = async function(reqId, fromName, fromEmail, fromPhone) {
+  try {
+    await updateDoc(doc(db, 'connects', reqId), { status: 'accepted' });
+    const el = document.getElementById('rc-'+reqId);
+    if (el) el.innerHTML = `<div class="contact-box" style="width:100%">
+      <div style="font-weight:600;margin-bottom:6px">Mutual match with ${fromName}!</div>
+      ${fromPhone ? '<div>Phone: <strong>'+fromPhone+'</strong></div>' : ''}
+      <div>Email: <strong>${fromEmail}</strong></div>
+      <div style="font-size:12px;margin-top:6px;opacity:0.8">You can now reach out directly!</div>
+    </div>`;
+    showToast("Mutual match! Contact details revealed.");
+  } catch(e) { showToast('Error. Try again.'); }
+};
+
+window.rejectReq = async function(reqId) {
+  try {
+    await updateDoc(doc(db, 'connects', reqId), { status: 'rejected' });
+    loadRequests();
+  } catch(e) {}
+};
+
+// ── ADMIN ──
+window.loadAdminUsers = async function() {
+  try {
+    const snap = await getDocs(collection(db, 'profiles'));
+    allAdminUsers = [];
+    snap.forEach(d => allAdminUsers.push({ id: d.id, ...d.data() }));
+    renderAdminTable(allAdminUsers);
+    document.getElementById('stat-total').textContent = allAdminUsers.length;
+    document.getElementById('stat-active').textContent = allAdminUsers.length;
+    document.getElementById('users-count').textContent = allAdminUsers.length;
+
+    // Load connects for stats
+    const cSnap = await getDocs(collection(db, 'connects'));
+    let pending = 0, accepted = 0;
+    cSnap.forEach(d => {
+      if(d.data().status==='pending') pending++;
+      if(d.data().status==='accepted') accepted++;
+    });
+    document.getElementById('stat-connects').textContent = pending;
+    document.getElementById('stat-mutual').textContent = accepted;
+
+    // Activity log
+    const logItems = allAdminUsers.slice(0,8).map(u => ({
+      time: u.createdAt ? new Date(u.createdAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '—',
+      msg: 'New user: ' + (u.name||u.email||'Unknown'),
+      type: 'user'
+    }));
+    renderLog('dash-log', logItems);
+    renderLog('full-log', logItems);
+  } catch(e) { console.error(e); }
+};
+
+function renderAdminTable(users) {
+  const avatarBg=['#EEEDFE','#E1F5EE','#FAECE7','#E6F1FB','#FAEEDA','#FBEAF0'];
+  const avatarText=['#534AB7','#0F6E56','#993C1D','#185FA5','#854F0B','#993556'];
+  const tbody = document.getElementById('user-tbody');
+  if(!users.length){
+    tbody.innerHTML='<tr><td colspan="16" style="text-align:center;padding:2rem;color:var(--text2)">No users yet — share your Homiefy link!</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map((u,i) => {
+    const init=(u.name||'?').split(' ').map(x=>x[0]).join('').toUpperCase();
+    const joined = u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '—';
+    return `<tr>
+      <td><span class="avatar-sm" style="background:${avatarBg[i%6]};color:${avatarText[i%6]}">${init}</span>${u.name||'—'}</td>
+      <td style="font-size:12px">${u.email||'—'}</td>
+      <td style="font-size:12px">${u.phone||'—'}</td>
+      <td style="font-size:12px">${u.area||'—'}</td>
+      <td>${u.budget||'—'}</td>
+      <td><span class="sbadge s-matched">${u.sharing||'—'} sharing</span></td>
+      <td>${u.year||'—'}</td>
+      <td style="font-size:12px">${u.dept||'—'}</td>
+      <td>${u.personality||'—'}</td>
+      <td style="font-size:12px">${u.cleanliness||'—'}</td>
+      <td style="font-size:12px">${u.sleep||'—'}</td>
+      <td style="font-size:12px">${u.smoking||'—'}</td>
+      <td style="font-size:12px">${u.alcohol||'—'}</td>
+      <td style="font-size:12px">${u.language||'—'}</td>
+      <td style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${u.note||'—'}</td>
+      <td style="font-size:12px">${joined}</td>
+    </tr>`;
+  }).join('');
+}
+
+window.filterUsers = function() {
+  const q = document.getElementById('user-search').value.toLowerCase();
+  const sh = document.getElementById('user-status-filter').value;
+  const filtered = allAdminUsers.filter(u =>
+    (!q || (u.name||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q)) &&
+    (!sh || (u.sharing||'') === sh)
+  );
+  renderAdminTable(filtered);
+};
+
+// ── ADMIN PAIRS ──
+window.loadAdminPairs = async function() {
+  try {
+    const snap = await getDocs(collection(db, 'connects'));
+    const pairs = [];
+    snap.forEach(d => pairs.push({ id: d.id, ...d.data() }));
+    const c = document.getElementById('pairs-list');
+    if(!pairs.length){ c.innerHTML='<div style="font-size:13px;color:var(--text2);padding:1rem 0">No connect requests yet.</div>'; return; }
+    c.innerHTML = pairs.map(p => `
+      <div class="match-pair">
+        <div class="pair-names">${p.fromName||'?'} → ${p.toName||'?'}</div>
+        <span class="sbadge ${p.status==='accepted'?'s-matched':p.status==='pending'?'s-pending':'s-new'}">${p.status}</span>
+        <div style="font-size:11px;color:var(--text3)">${p.createdAt ? new Date(p.createdAt).toLocaleDateString() : ''}</div>
+      </div>`).join('');
+  } catch(e) { console.error(e); }
+};
+
+function renderLog(elId, data) {
+  const el = document.getElementById(elId);
+  if(!el) return;
+  if(!data.length){ el.innerHTML='<div style="font-size:13px;color:var(--text2);padding:1rem 0">No activity yet.</div>'; return; }
+  el.innerHTML = data.map(l => `
+    <div class="log-item">
+      <span class="log-time">${l.time}</span>
+      <span class="log-msg">${l.msg}</span>
+      <span class="log-type ${l.type==='match'?'log-match':l.type==='user'?'log-user':'log-system'}">${l.type}</span>
+    </div>`).join('');
+}
+
+window.runMatching = function() {
+  const box=document.getElementById('matching-result');
+  const bar=document.getElementById('match-progress');
+  const title=document.getElementById('match-result-title');
+  const body=document.getElementById('match-result-body');
+  box.style.display='block'; bar.style.width='0%';
+  title.textContent='Matching in progress...';
+  const steps=['Reading profiles...','Filtering by sharing type...','Scoring compatibility...','Building groups...','Done!'];
+  let p=0;
+  const iv=setInterval(()=>{
+    p+=20; bar.style.width=p+'%';
+    body.textContent=steps[Math.floor(p/20)-1]||'';
+    if(p>=100){ clearInterval(iv); title.textContent='Matching complete'; body.innerHTML='<span style="color:var(--green-text);font-weight:600">Matching engine ran successfully.</span> Users will see updated matches next time they visit.'; showToast('Matching done!'); }
+  },450);
+};
+
+// ── RATING ──
+let selectedRating = 0, ratingAnswers = {};
+window.rateStar = function(n) {
+  selectedRating = n;
+  for(let i=1;i<=5;i++) { document.getElementById('star-'+i).querySelector('svg').style.fill = i<=n?'#7F77DD':'none'; }
+  showToast(n>=4?'Glad you loved it! 💜':n>=3?'Thanks for the feedback!':'Sorry to hear that — we\'ll improve!');
+};
+window.rateChip = function(el, group) {
+  el.closest('.rating-chips').querySelectorAll('.rating-chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel'); ratingAnswers[group]=el.textContent;
+};
+window.submitRating = function() {
+  if(!selectedRating){ showToast('Please select a star rating!'); return; }
+  localStorage.setItem('homiefy_rated','true');
+  showToast('Thank you for your feedback! 💜');
+  setTimeout(()=>showPage('matches'),1500);
+};
+
+function checkRatingPrompt() {
+  const cd = localStorage.getItem('homiefy_connect_date');
+  if(cd && !localStorage.getItem('homiefy_rated')) {
+    const days = (Date.now()-parseInt(cd))/(1000*60*60*24);
+    if(days>=7){ setTimeout(()=>{ showPage('rating'); showToast('How did it go with your roommate?'); },2000); }
+  }
+}
+
+window._currentUser = () => currentUser;
+window._currentProfile = () => currentProfile;
+window.loadMatches = window.loadMatches;
+window.loadRequests = window.loadRequests;
+window.loadAdminUsers = window.loadAdminUsers;
+</script>
+
+<script>
+// ── PAGE NAVIGATION ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg = document.getElementById('page-'+id);
+  if(pg) pg.classList.add('active');
+  if(id==='admin') {
+    const user = window._currentUser ? window._currentUser() : null;
+    const isAdmin = user && user.email === 'homiefy.15@gmail.com';
+    document.getElementById('admin-blocked').style.display = isAdmin?'none':'block';
+    document.getElementById('admin-content').style.display = isAdmin?'flex':'none';
+    if(isAdmin && window.loadAdminUsers) loadAdminUsers();
+  }
+  window.scrollTo(0,0);
+}
+
+function showAdminPanel(id, el) {
+  document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('ap-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  if(id==='pairs' && window.loadAdminPairs) loadAdminPairs();
+}
+
+// ── FORM ──
+let fStep=1; const fTotal=5;
+const fLabels=['Basic info','Location & sharing','Daily habits','Lifestyle & vibe','Final touches'];
+
+function formNext() {
+  if(fStep<fTotal){
+    document.getElementById('fstep-'+fStep).style.display='none';
+    fStep++;
+    document.getElementById('fstep-'+fStep).style.display='block';
+    document.getElementById('btn-back').style.visibility='visible';
+    document.getElementById('btn-next').textContent=fStep===fTotal?'Submit':'Next';
+    document.getElementById('f-progress').style.width=(fStep/fTotal*100)+'%';
+    document.getElementById('f-step-label').textContent='Step '+fStep+' of '+fTotal+' — '+fLabels[fStep-1];
+  } else {
+    const profileData = {
+      name: document.getElementById('f-name').value,
+      age: document.getElementById('f-age').value,
+      phone: document.getElementById('f-phone').value,
+      degree: document.getElementById('f-degree').value,
+      dept: document.getElementById('f-dept').value,
+      area: document.getElementById('f-area').value,
+      native: document.getElementById('f-native').value,
+      sunday: document.getElementById('f-sunday').value,
+      dealbreaker: document.getElementById('f-deal').value,
+      note: document.getElementById('f-note').value,
+      gender: document.querySelector('#cg-gender .sel')?.dataset.val||'',
+      year: document.querySelector('#cg-year .sel')?.dataset.val||'',
+      budget: document.querySelector('#cg-budget .sel')?.dataset.val||'',
+      sharing: document.querySelector('#cg-sharing .sel')?.dataset.val||'2',
+      situation: document.querySelector('#cg-situation .sel')?.dataset.val||'',
+      genderpref: document.querySelector('#cg-genderpref .sel')?.dataset.val||'',
+      cleanliness: document.querySelector('#cg-clean .sel')?.dataset.val||'',
+      sleep: document.querySelector('#cg-sleep .sel')?.dataset.val||'',
+      noise: document.querySelector('#cg-noise .sel')?.dataset.val||'',
+      social: document.querySelector('#cg-social .sel')?.dataset.val||'',
+      cook: document.querySelector('#cg-cook .sel')?.dataset.val||'',
+      personality: document.querySelector('#cg-personality .sel')?.dataset.val||'',
+      alcohol: document.querySelector('#cg-alcohol .sel')?.dataset.val||'',
+      smoking: document.querySelector('#cg-smoke .sel')?.dataset.val||'',
+      parties: document.querySelector('#cg-parties .sel')?.dataset.val||'',
+      language: document.querySelector('#cg-lang .sel')?.dataset.val||'',
+      profilePic: window._profilePicData||''
+    };
+    if(!profileData.name){ showToast('Please enter your name!'); return; }
+    if(window.saveProfile) saveProfile(profileData);
+  }
+}
+
+function formBack() {
+  if(fStep>1){
+    document.getElementById('fstep-'+fStep).style.display='none';
+    fStep--;
+    document.getElementById('fstep-'+fStep).style.display='block';
+    document.getElementById('btn-back').style.visibility=fStep===1?'hidden':'visible';
+    document.getElementById('btn-next').textContent='Next';
+    document.getElementById('f-progress').style.width=(fStep/fTotal*100)+'%';
+    document.getElementById('f-step-label').textContent='Step '+fStep+' of '+fTotal+' — '+fLabels[fStep-1];
+  }
+}
+
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',function(){
+    this.closest('.chip-group').querySelectorAll('.chip').forEach(x=>x.classList.remove('sel'));
+    this.classList.add('sel');
+  });
+});
+
+function previewProfilePic(input) {
+  if(input.files&&input.files[0]){
+    const reader=new FileReader();
+    reader.onload=function(e){
+      document.getElementById('profile-pic-preview').src=e.target.result;
+      document.getElementById('profile-pic-preview').style.display='block';
+      document.getElementById('profile-pic-icon').style.display='none';
+      window._profilePicData=e.target.result;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function filterMatches(filter, btn) {
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  if(window.loadMatches) loadMatches();
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// INIT
+document.getElementById('auth-section').style.display='flex';
+document.getElementById('main-nav').style.display='none';
+</script>
+</body>
+</html>
